@@ -14,6 +14,7 @@ def main():
     parser.add_argument("--slip-date", default="Bandung, 29 September 2026", help="Tanggal Slip")
     parser.add_argument("--signer-title", default="Bagian Keuangan,", help="Jabatan Penanda Tangan")
     parser.add_argument("--signer-name", default="Reza Fauzi", help="Nama Penanda Tangan")
+    parser.add_argument("--template", default="default", choices=["default", "algae"], help="Pilihan template desain: default atau algae")
     parser.add_argument("--id", type=int, default=None, help="Generate hanya untuk nomor urut ID tertentu")
     parser.add_argument("--zip", action="store_true", help="Kemas semua PDF ke dalam file ZIP")
 
@@ -49,7 +50,8 @@ def main():
         "period": args.period,
         "slip_date": args.slip_date,
         "signer_title": args.signer_title,
-        "signer_name": args.signer_name
+        "signer_name": args.signer_name,
+        "template": args.template
     }
 
     if args.zip:

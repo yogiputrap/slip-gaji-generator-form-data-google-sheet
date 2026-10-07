@@ -45,13 +45,15 @@ CURRENT_CONFIG = {
     "label_2b": "Bonus Kehadiran",
     "label_2c": "Lembur/Tunj.Hadir Kary. WFA",
     "label_2d": "Bonus Kinerja SLK",
-    "label_2e": "Lain-Lain"
+    "label_2e": "Lain-Lain",
+    "template": "default"
 }
 
 # Cache karyawan saat ini (kosong pada startup, tidak auto-fetch)
 CACHED_EMPLOYEES = []
 
 class ConfigUpdate(BaseModel):
+    template: Optional[str] = None
     company_title: Optional[str] = None
     company_subtitle: Optional[str] = None
     company_address: Optional[str] = None

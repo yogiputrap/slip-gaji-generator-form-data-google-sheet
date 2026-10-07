@@ -516,6 +516,65 @@
     .asset-lbl { font-size: 0.72rem; font-weight: 600; }
     .asset-btns { display: flex; gap: 4px; }
 
+    /* ─── TEMPLATE PICKER ─── */
+    .tpl-picker { display: flex; flex-direction: column; gap: 8px; }
+    .tpl-card {
+      border: 1px solid var(--b);
+      border-radius: var(--r8);
+      padding: 10px 12px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .tpl-card:hover { border-color: var(--t2); background: var(--bh); }
+    .tpl-card.active {
+      border-color: var(--t);
+      box-shadow: 0 0 0 1px var(--t);
+      background: #fff;
+    }
+    .tpl-card-hd { display: flex; align-items: center; justify-content: space-between; }
+    .tpl-card-title { font-size: 0.77rem; font-weight: 700; }
+    .tpl-badge {
+      font-size: 0.62rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--bs);
+      color: var(--t2);
+      font-weight: 600;
+    }
+    .tpl-badge-green { background: #e6f7ee; color: #13714C; }
+    .tpl-card-desc { font-size: 0.68rem; color: var(--t3); line-height: 1.35; }
+    .tpl-palette { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+    .swatch {
+      width: 13px; height: 13px; border-radius: 50%; display: inline-block;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .modal-tpl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .modal-tpl-opt {
+      border: 1px solid var(--b);
+      border-radius: var(--r8);
+      padding: 9px 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .modal-tpl-opt:hover { border-color: var(--t2); }
+    .modal-tpl-opt.active {
+      border-color: var(--t);
+      box-shadow: 0 0 0 1px var(--t);
+    }
+
     .info-row {
       display: flex;
       justify-content: space-between;
@@ -991,6 +1050,43 @@
               </div>
             </div>
 
+            <!-- PILIHAN TEMPLATE SLIP -->
+            <div class="rc" id="templateCardSection">
+              <div class="rc-hd">
+                <span class="rc-title">Pilihan Template Slip</span>
+                <span class="pill pill-green" id="activeTemplateBadge">Default</span>
+              </div>
+              <div class="tpl-picker">
+                <div class="tpl-card active" id="railTpl_default" onclick="selectTemplate('default')">
+                  <div class="tpl-card-hd">
+                    <span class="tpl-card-title">Classic Monokrom</span>
+                    <span class="tpl-badge">Default</span>
+                  </div>
+                  <div class="tpl-card-desc">Hitam putih formal, standar perbankan &amp; akuntansi</div>
+                  <div class="tpl-palette">
+                    <span class="swatch" style="background:#18181b" title="Hitam"></span>
+                    <span class="swatch" style="background:#71717a" title="Abu Gelap"></span>
+                    <span class="swatch" style="background:#e4e4e7" title="Abu Terang"></span>
+                    <span class="swatch" style="background:#ffffff;border:1px solid #d4d4d8" title="Putih"></span>
+                  </div>
+                </div>
+
+                <div class="tpl-card" id="railTpl_algae" onclick="selectTemplate('algae')">
+                  <div class="tpl-card-hd">
+                    <span class="tpl-card-title" style="color:#13714C">Algae Clean Green</span>
+                    <span class="tpl-badge tpl-badge-green">Baru</span>
+                  </div>
+                  <div class="tpl-card-desc">Aksen hijau segar (#13714C, #3AB67D), background putih bersih</div>
+                  <div class="tpl-palette">
+                    <span class="swatch" style="background:#13714C" title="#13714C Deep Green"></span>
+                    <span class="swatch" style="background:#3AB67D" title="#3AB67D Vibrant Green"></span>
+                    <span class="swatch" style="background:#A2E494" title="#A2E494 Mint"></span>
+                    <span class="swatch" style="background:#E9EBED" title="#E9EBED Soft Gray"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- INFO SLIP -->
             <div class="rc">
               <div class="rc-hd">
@@ -1091,6 +1187,37 @@
       </div>
       <div class="modal-body">
         <div class="cfg-form">
+          <div class="field">
+            <label>Pilihan Template Slip Gaji</label>
+            <div class="modal-tpl-grid">
+              <div class="modal-tpl-opt active" id="modalTpl_default" onclick="selectTemplate('default')">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-weight:600;font-size:0.75rem">Classic Monokrom</span>
+                  <span class="tpl-badge">Default</span>
+                </div>
+                <div style="font-size:0.65rem;color:var(--t3);margin-top:2px">Hitam putih presisi standar akuntansi</div>
+                <div class="tpl-palette" style="margin-top:5px">
+                  <span class="swatch" style="background:#18181b"></span>
+                  <span class="swatch" style="background:#71717a"></span>
+                  <span class="swatch" style="background:#e4e4e7"></span>
+                  <span class="swatch" style="background:#ffffff;border:1px solid #d4d4d8"></span>
+                </div>
+              </div>
+              <div class="modal-tpl-opt" id="modalTpl_algae" onclick="selectTemplate('algae')">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-weight:600;font-size:0.75rem;color:#13714C">Algae Clean Green</span>
+                  <span class="tpl-badge tpl-badge-green">Baru</span>
+                </div>
+                <div style="font-size:0.65rem;color:var(--t3);margin-top:2px">Aksen hijau segar (#13714C), background putih</div>
+                <div class="tpl-palette" style="margin-top:5px">
+                  <span class="swatch" style="background:#13714C"></span>
+                  <span class="swatch" style="background:#3AB67D"></span>
+                  <span class="swatch" style="background:#A2E494"></span>
+                  <span class="swatch" style="background:#E9EBED"></span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="fg">
             <div class="field">
               <label>Periode Gaji</label>
@@ -1184,6 +1311,7 @@
     setText('infoSigner', c.signer_name || 'Reza Fauzi');
     const titleClean = (c.signer_title || 'Bagian Keuangan,').replace(/,$/, '').trim();
     setText('infoSignerTitle', titleClean);
+    updateTemplateUI(c.template || 'default');
 
     const topbarBtn = document.getElementById('topbarSheetBtn');
     const sbLink = document.getElementById('sidebarSheetLink');
@@ -1234,6 +1362,42 @@
       bannerText.innerHTML = `Terhubung ke Google Sheet — <strong id="bannerPeriod">${cfg.period || 'September 2026'}</strong> (<span id="bannerCount">${employees.length}</span> karyawan)`;
       if (bannerDot) bannerDot.style.background = 'var(--green)';
     }
+  }
+
+  /* ── TEMPLATE SWITCHER ── */
+  async function selectTemplate(tpl) {
+    if (!['default', 'algae'].includes(tpl)) tpl = 'default';
+    cfg.template = tpl;
+    updateTemplateUI(tpl);
+    try {
+      const r = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ template: tpl })
+      });
+      if (r.ok) {
+        const tplName = tpl === 'algae' ? 'Algae Clean Green' : 'Classic Monokrom';
+        showToast(`✓ Template ${tplName} aktif`);
+        if (activePreviewId) {
+          document.getElementById('previewFrame').src = `/api/preview-html/${activePreviewId}?t=${Date.now()}`;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to update template', e);
+    }
+  }
+
+  function updateTemplateUI(tpl) {
+    const isAlgae = tpl === 'algae';
+    setText('activeTemplateBadge', isAlgae ? 'Algae Green' : 'Default');
+    
+    // Rail cards
+    document.getElementById('railTpl_default')?.classList.toggle('active', !isAlgae);
+    document.getElementById('railTpl_algae')?.classList.toggle('active', isAlgae);
+
+    // Modal options
+    document.getElementById('modalTpl_default')?.classList.toggle('active', !isAlgae);
+    document.getElementById('modalTpl_algae')?.classList.toggle('active', isAlgae);
   }
 
   async function loadEmployees() {
@@ -1546,6 +1710,7 @@
 
   /* ── CONFIG MODAL ── */
   function openConfigModal() {
+    updateTemplateUI(cfg.template || 'default');
     document.getElementById('cfgPeriod').value = cfg.period || '';
     document.getElementById('cfgSlipDate').value = cfg.slip_date || '';
     document.getElementById('cfgSubtitle').value = cfg.company_subtitle || '';
@@ -1559,6 +1724,7 @@
   }
   async function saveConfig() {
     const payload = {
+      template: cfg.template || 'default',
       period: document.getElementById('cfgPeriod').value,
       slip_date: document.getElementById('cfgSlipDate').value,
       company_subtitle: document.getElementById('cfgSubtitle').value,

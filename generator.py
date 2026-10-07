@@ -303,6 +303,8 @@ def render_slip_html(emp: Dict[str, Any], config: Dict[str, Any], preview_mode: 
     label_2c = config.get("label_2c", "Lembur/Tunj.Hadir Kary. WFA")
     label_2d = config.get("label_2d", "Bonus Kinerja SLK")
     label_2e = config.get("label_2e", "Lain-Lain")
+    template = config.get("template", "default")
+    page_class = "page theme-algae" if template == "algae" else "page"
 
     nama_display = emp['nama']
 
@@ -614,11 +616,86 @@ def render_slip_html(emp: Dict[str, Any], config: Dict[str, Any], preview_mode: 
   .sig-name {{
     font-size: 11px;
   }}
+
+  /* ═══════════════ THEME: ALGAE GREEN (CLEAN WHITE BACKGROUND) ═══════════════ */
+  /* Palette: #13714C, #3AB67D, #A2E494, #E9EBED, Background: #FFFFFF */
+  .theme-algae {{
+    color: #1a2e22;
+  }}
+  .theme-algae .title-main {{
+    color: #13714C;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+  }}
+  .theme-algae .title-sub {{
+    color: #24563e;
+  }}
+  .theme-algae .title-address {{
+    color: #4b6b59;
+  }}
+  .theme-algae .header-divider {{
+    border-top: 2px solid #13714C;
+  }}
+  .theme-algae .no-row {{
+    color: #13714C;
+    font-weight: 600;
+  }}
+  .theme-algae .emp-table .emp-label {{
+    color: #13714C;
+  }}
+  .theme-algae .divider-thick {{
+    border-top: 2.2px solid #13714C;
+  }}
+  .theme-algae .section-title {{
+    color: #13714C;
+    text-decoration: none;
+    background: #f0f8f4;
+    padding: 3px 14px;
+    border-radius: 4px;
+    border-left: 3px solid #13714C;
+    border-right: 3px solid #3AB67D;
+    display: inline-block;
+  }}
+  .theme-algae .salary-table td.col-item[style*="font-weight: bold"] {{
+    color: #13714C;
+  }}
+  .theme-algae .salary-table tr.total-row {{
+    color: #13714C;
+    background: #f2f9f5;
+  }}
+  .theme-algae .salary-table tr.total-row td {{
+    border-top: 1.5px solid #3AB67D;
+    border-bottom: 2px solid #13714C;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }}
+  .theme-algae .terbilang-box {{
+    border-top: 1.5px solid #A2E494;
+    background: #fafdfb;
+    border-radius: 3px;
+    padding: 6px 12px;
+    color: #13714C;
+    font-weight: 500;
+  }}
+  .theme-algae .sig-date {{
+    color: #4b6b59;
+  }}
+  .theme-algae .sig-title {{
+    color: #13714C;
+    font-weight: 600;
+  }}
+  .theme-algae .sig-line {{
+    border-top: 1.5px solid #13714C;
+  }}
+  .theme-algae .sig-name {{
+    color: #13714C;
+    font-weight: bold;
+  }}
 </style>
 </head>
 <body>
 {extra_wrap_open}
-<div class="page" id="slipPage">
+<div class="{page_class}" id="slipPage">
   <!-- HEADER -->
   <div class="header">
     <div class="logo-box">
