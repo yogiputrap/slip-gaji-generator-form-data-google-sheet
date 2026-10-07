@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.env
+venv/
+.venv/
+env/
+output/*.pdf
+output/*.zip
+test_*.png
+*.tmp
+tmp/
