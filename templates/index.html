@@ -593,17 +593,40 @@
     .info-lbl { color: var(--t2); flex-shrink: 0; }
     .info-val { font-weight: 600; text-align: right; word-break: break-word; }
 
+    /* ─── LANGKAH 1: SINKRONISASI DATA ─── */
+    .sync-card {
+      background: #fff;
+      border: 1.5px solid var(--t);
+      border-radius: var(--r12);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .sync-card.done { border: 1px solid var(--b); background: var(--bh); }
+    .sync-head { display: flex; align-items: center; gap: 12px; }
+    .step-badge {
+      width: 26px; height: 26px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--t); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+    }
+    .sync-card.done .step-badge { background: var(--green); }
+    .sync-title { font-size: 0.92rem; font-weight: 700; line-height: 1.2; }
+    .sync-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .sync-in {
-      width: 100%;
+      flex: 1; min-width: 240px;
       border: 1px solid var(--b);
       border-radius: var(--r8);
-      padding: 7px 11px;
-      font-size: 0.76rem;
-      background: var(--bh);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      background: #fff;
       outline: none;
       transition: border-color 0.12s;
     }
-    .sync-in:focus { border-color: var(--t); background: #fff; }
+    .sync-in:focus { border-color: var(--t); }
     .sync-btns { display: flex; gap: 6px; }
 
     /* ─── MODAL ─── */
@@ -802,7 +825,7 @@
       .card-hd { flex-direction: column; align-items: stretch; gap: 8px; }
       .card-hd-r { justify-content: space-between; }
       .search-in { width: 100%; }
-      .banner { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .sync-in { min-width: 100%; }
       .col-rek, .col-gp { display: none; }
       #previewModal .modal-box {
         width: 96vw;
@@ -925,16 +948,31 @@
       <!-- CONTENT -->
       <div class="content">
 
-        <!-- STATUS BANNER -->
-        <div class="banner" id="statusBanner">
-          <div class="banner-info" id="bannerInfo">
-            <div class="banner-dot" id="bannerDot" style="background: var(--t3);"></div>
-            <span id="bannerText">Belum terhubung ke Google Sheet — Tempel link Google Sheet di panel sinkronisasi lalu klik Tarik Sheet</span>
+        <!-- LANGKAH 1: SINKRONISASI DATA -->
+        <div class="sync-card" id="statusBanner">
+          <div class="sync-head">
+            <span class="step-badge">1</span>
+            <div class="sync-head-txt">
+              <div class="sync-title">Sinkronisasi Data</div>
+              <div class="banner-info" id="bannerInfo">
+                <div class="banner-dot" id="bannerDot" style="background: var(--t3);"></div>
+                <span id="bannerText">Langkah awal: tempel link Google Sheet lalu klik Tarik Sheet, atau upload file Excel</span>
+              </div>
+            </div>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="fetchSheetData()">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            Sinkronkan Data
-          </button>
+          <div class="sync-row">
+            <input type="text" class="sync-in" id="sheetUrlInput"
+              value=""
+              placeholder="Tempel URL Google Sheet di sini...">
+            <div class="sync-btns">
+              <button class="btn btn-dark btn-sm" onclick="fetchSheetData()">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Tarik Sheet
+              </button>
+              <input type="file" id="xlsxInput" accept=".xlsx,.xls" style="display:none" onchange="uploadXlsx(this)">
+              <button class="btn btn-outline btn-sm" onclick="document.getElementById('xlsxInput').click()">Upload Excel</button>
+            </div>
+          </div>
         </div>
 
         <!-- METRICS -->
@@ -1017,7 +1055,7 @@
                 <tbody id="empTbody">
                   <tr>
                     <td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">
-                      Belum ada data karyawan. Silakan tempel link Google Sheet di panel Sinkronisasi Data lalu klik 'Tarik Sheet' atau Upload file Excel.
+                      Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik 'Tarik Sheet' atau Upload file Excel.
                     </td>
                   </tr>
                 </tbody>
@@ -1127,25 +1165,6 @@
                   <span class="info-lbl">Jabatan</span>
                   <span class="info-val" style="color:var(--t2);font-weight:500" id="infoSignerTitle">Bagian Keuangan</span>
                 </div>
-              </div>
-            </div>
-
-            <!-- SINKRONISASI -->
-            <div class="rc">
-              <div class="rc-hd">
-                <span class="rc-title">Sinkronisasi Data</span>
-                <span class="pill pill-green">Live</span>
-              </div>
-              <input type="text" class="sync-in" id="sheetUrlInput"
-                value=""
-                placeholder="Tempel URL Google Sheet di sini...">
-              <div class="sync-btns">
-                <button class="btn btn-dark btn-sm" style="flex:1" onclick="fetchSheetData()">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                  Tarik Sheet
-                </button>
-                <input type="file" id="xlsxInput" accept=".xlsx,.xls" style="display:none" onchange="uploadXlsx(this)">
-                <button class="btn btn-outline btn-sm" onclick="document.getElementById('xlsxInput').click()">Upload Excel</button>
               </div>
             </div>
 
@@ -1371,13 +1390,16 @@
   function updateBanner() {
     const bannerText = document.getElementById('bannerText');
     const bannerDot = document.getElementById('bannerDot');
+    const card = document.getElementById('statusBanner');
     if (!bannerText) return;
     if (!employees || employees.length === 0) {
-      bannerText.textContent = 'Belum terhubung ke Google Sheet — Tempel link Google Sheet di panel sinkronisasi lalu klik Tarik Sheet';
+      bannerText.textContent = 'Langkah awal: tempel link Google Sheet lalu klik Tarik Sheet, atau upload file Excel';
       if (bannerDot) bannerDot.style.background = 'var(--t3)';
+      if (card) card.classList.remove('done');
     } else {
       bannerText.innerHTML = `Terhubung ke Google Sheet — <strong id="bannerPeriod">${cfg.period || 'September 2026'}</strong> (<span id="bannerCount">${employees.length}</span> karyawan)`;
       if (bannerDot) bannerDot.style.background = 'var(--green)';
+      if (card) card.classList.add('done');
     }
   }
 
@@ -1515,7 +1537,7 @@
   function renderTable(list) {
     const tbody = document.getElementById('empTbody');
     if (!list || !list.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di panel Sinkronisasi Data lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
       updateSelCount();
       return;
     }
