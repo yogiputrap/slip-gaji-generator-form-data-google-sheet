@@ -2,11 +2,12 @@ import os
 import argparse
 import generator
 
+# URL sheet tidak disimpan di kode (data gaji sensitif): isi lewat env SHEET_URL atau argumen --sheet
 DEFAULT_SHEET = os.environ.get("SHEET_URL", "")
 
 def main():
     parser = argparse.ArgumentParser(description="Auto Generate Slip Gaji dari Google Sheet / Excel")
-    parser.add_argument("--sheet", default=DEFAULT_SHEET, help="URL Google Sheet atau path file Excel .xlsx")
+    parser.add_argument("--sheet", default=DEFAULT_SHEET, help="URL Google Sheet atau path file Excel .xlsx (default: env SHEET_URL)")
     parser.add_argument("--output-dir", default="./output", help="Direktori penyimpanan file PDF hasil generate")
     parser.add_argument("--logo", default="assets/logo_default.png", help="Path file logo perusahaan")
     parser.add_argument("--signature", default="", help="Path file gambar tanda tangan (opsional)")
@@ -20,9 +21,13 @@ def main():
 
     args = parser.parse_args()
 
+    if not args.sheet:
+        parser.error("Sumber data belum diisi: gunakan --sheet <URL/file.xlsx> atau set env SHEET_URL")
+
     os.makedirs(args.output_dir, exist_ok=True)
 
-    print(f"Mengambil data penggajian dari: {args.sheet}")
+    sumber = "Google Sheet" if args.sheet.startswith(("http://", "https://")) else args.sheet
+    print(f"Mengambil data penggajian dari: {sumber}")
     try:
         res = generator.fetch_data_from_sheet(args.sheet)
         if isinstance(res, tuple) and len(res) == 3:

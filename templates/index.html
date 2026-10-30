@@ -515,6 +515,14 @@
     .asset-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
     .asset-lbl { font-size: 0.72rem; font-weight: 600; }
     .asset-btns { display: flex; gap: 4px; }
+    .sig-picker { display: none; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin-top: 6px; }
+    .sig-picker.open { display: grid; }
+    .sig-opt { border: 1px solid var(--b); border-radius: 6px; background: #fff; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font: inherit; }
+    .sig-opt:hover { border-color: var(--t3); }
+    .sig-opt.active { border-color: var(--t); box-shadow: 0 0 0 1px var(--t); }
+    .sig-opt img { width: 100%; height: 34px; object-fit: contain; }
+    .sig-opt span { font-size: 0.58rem; color: var(--t3); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sig-empty { grid-column: 1 / -1; font-size: 0.68rem; color: var(--t3); text-align: center; padding: 6px; }
 
     /* ─── TEMPLATE PICKER ─── */
     .tpl-picker { display: flex; flex-direction: column; gap: 8px; }
@@ -858,6 +866,13 @@
         </a>
       </nav>
 
+      <form method="post" action="/logout" style="padding: 0 12px 8px">
+        <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </button>
+      </form>
+
       <div class="sb-profile">
         <div class="sb-profile-inner">
           <div class="avatar" id="sidebarAvatar">D</div>
@@ -1044,10 +1059,12 @@
                   <div class="asset-btns">
                     <input type="file" id="sigInput" accept="image/*" style="display:none" onchange="uploadSig(this)">
                     <button class="btn btn-outline btn-xs" onclick="document.getElementById('sigInput').click()">Upload</button>
+                    <button class="btn btn-outline btn-xs" onclick="toggleSigPicker()">Pilih</button>
                     <button class="btn btn-outline btn-xs" onclick="clearSig()">Hapus</button>
                   </div>
                 </div>
               </div>
+              <div id="sigPicker" class="sig-picker"></div>
             </div>
 
             <!-- PILIHAN TEMPLATE SLIP -->
@@ -1780,9 +1797,51 @@
       img.src = data.signature_preview; img.style.display = 'block';
       document.getElementById('sigLabel').style.display = 'none';
       showToast('✓ Tanda tangan berhasil diupload');
+      if (document.getElementById('sigPicker').classList.contains('open')) renderSigPicker();
       if (activePreviewId) openPreview(activePreviewId);
     } else { showToast('⚠ Gagal upload tanda tangan'); }
     input.value = '';
+  }
+  async function toggleSigPicker() {
+    const box = document.getElementById('sigPicker');
+    if (box.classList.contains('open')) { box.classList.remove('open'); return; }
+    await renderSigPicker();
+    box.classList.add('open');
+  }
+  async function renderSigPicker() {
+    const box = document.getElementById('sigPicker');
+    const r = await fetch('/api/signatures');
+    const data = await r.json();
+    box.innerHTML = '';
+    if (!data.signatures.length) {
+      box.innerHTML = '<div class="sig-empty">Belum ada tanda tangan di folder assets</div>';
+      return;
+    }
+    data.signatures.forEach(s => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sig-opt' + (s.selected ? ' active' : '');
+      b.title = s.name;
+      const img = document.createElement('img'); img.src = s.url; img.alt = s.name;
+      const lbl = document.createElement('span');
+      lbl.textContent = s.name.replace(/^custom_signature_?/, '').replace(/\.[^.]+$/, '') || s.name;
+      b.append(img, lbl);
+      b.onclick = () => selectSig(s.name);
+      box.appendChild(b);
+    });
+  }
+  async function selectSig(name) {
+    const fd = new FormData(); fd.append('name', name);
+    const r = await fetch('/api/select-signature', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (r.ok) {
+      const img = document.getElementById('sigThumb');
+      img.src = data.signature_preview; img.style.display = 'block';
+      document.getElementById('sigLabel').style.display = 'none';
+      showToast('✓ Tanda tangan dipilih');
+      await renderSigPicker();
+      if (activePreviewId) openPreview(activePreviewId);
+    } else { showToast('⚠ Gagal memilih tanda tangan'); }
   }
   async function clearSig() {
     const r = await fetch('/api/clear-signature', { method: 'POST' });

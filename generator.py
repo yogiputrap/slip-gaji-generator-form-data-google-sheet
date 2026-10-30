@@ -1,7 +1,9 @@
 import os
 import re
 import math
+import shutil
 import subprocess
+import sys
 import tempfile
 import urllib.request
 import base64
@@ -190,58 +192,114 @@ def fetch_data_from_sheet(sheet_url_or_path: str):
     
     return employees, period, slip_date
 
+def _norm_header(val: Any) -> str:
+    return re.sub(r'\s+', ' ', str(val or '')).strip().lower()
+
+def _num(val: Any) -> float:
+    """Konversi sel ke float; kosong/teks non-angka dianggap 0."""
+    if val is None or isinstance(val, bool):
+        return 0.0
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return 0.0
+
+def _has_month(text: str) -> bool:
+    return any(re.search(r'\b' + re.escape(p) + r'\b', text, re.IGNORECASE) for p, _ in MONTH_NAMES)
+
+def map_columns(sheet) -> Dict[str, int]:
+    """
+    Petakan kolom berdasarkan teks header baris 1 (bukan nomor kolom tetap).
+    Blok ringkasan memakai penanda huruf: (a) Gaji Pokok, (b) Tunjangan,
+    (c) Tunjangan Kehadiran, (d) Upah Lembur, (e) Total Bonus,
+    (f) Pendapatan Lain-Lain, (g) Potongan Ketidakhadiran, (h) Potongan Lain-Lain.
+    """
+    cols: Dict[str, int] = {}
+    letters = {"a": "gaji_pokok", "b": "tunjangan", "c": "tunj_kehadiran", "d": "lembur",
+               "e": "bonus", "f": "pendapatan_lain", "g": "potongan_kehadiran", "h": "potongan_lain"}
+    for c in range(1, sheet.max_column + 1):
+        h = _norm_header(sheet.cell(1, c).value)
+        if not h:
+            continue
+        m = re.search(r'\(([a-h])\)$', h)
+        if m:
+            cols[letters[m.group(1)]] = c
+        elif h == "no." or h == "no":
+            cols.setdefault("no", c)
+        elif h == "nama":
+            cols.setdefault("nama", c)
+        elif h == "bagian":
+            cols.setdefault("bagian", c)
+        elif h == "posisi":
+            cols.setdefault("posisi", c)
+        elif h.startswith("no. rek") or h.startswith("no rek"):
+            cols.setdefault("rekening", c)
+        elif h.startswith("take home"):
+            cols.setdefault("take_home", c)
+
+    missing = [k for k in ("nama", "gaji_pokok", "tunjangan", "tunj_kehadiran", "lembur",
+                           "bonus", "pendapatan_lain", "potongan_kehadiran", "potongan_lain")
+               if k not in cols]
+    if missing:
+        raise ValueError(f"Kolom header tidak ditemukan di sheet: {', '.join(missing)}")
+    return cols
+
 def parse_workbook(wb: openpyxl.Workbook):
     sheet = wb.active
-    
-    # Deteksi periode dan tanggal slip dari kolom 41 (AO) baris 1
-    col41_val = sheet.cell(1, 41).value or ""
-    detected_period, detected_slip_date = detect_period_from_header(str(col41_val))
-    if detected_period == "August 2026" and not re.search(r'\b(agustus|august)\b', str(col41_val), re.IGNORECASE):
-        for col_idx in range(1, min(sheet.max_column + 1, 60)):
-            cval = str(sheet.cell(1, col_idx).value or "")
-            p, s = detect_period_from_header(cval)
-            if p != "August 2026" or re.search(r'\b(agustus|august)\b', cval, re.IGNORECASE):
-                detected_period, detected_slip_date = p, s
-                break
+    cols = map_columns(sheet)
+
+    # Periode dari header "Take Home <Bulan>"; fallback ke header lain yang memuat nama bulan
+    detected_period, detected_slip_date = detect_period_from_header("")
+    candidates = [cols["take_home"]] if "take_home" in cols else []
+    candidates += [c for c in range(1, sheet.max_column + 1) if c not in candidates]
+    for c in candidates:
+        cval = str(sheet.cell(1, c).value or "")
+        if _has_month(cval):
+            detected_period, detected_slip_date = detect_period_from_header(cval)
+            break
+
+    def cell(r: int, key: str):
+        return sheet.cell(r, cols[key]).value if key in cols else None
 
     employees = []
-    
+
     for r in range(2, sheet.max_row + 1):
-        nama = sheet.cell(r, 2).value
+        nama = cell(r, "nama")
         if not nama or not str(nama).strip() or str(nama).strip().startswith("="):
             continue
-        
-        nama_clean = str(nama).strip()
-        no_val = sheet.cell(r, 1).value
-        try:
-            no = int(float(no_val)) if no_val is not None else len(employees) + 1
-        except (ValueError, TypeError):
-            no = len(employees) + 1
 
-        bagian = sheet.cell(r, 4).value or "OPERASIONAL"
-        posisi = sheet.cell(r, 5).value or ""
-        rek_raw = sheet.cell(r, 6).value
-        rek = clean_rekening(rek_raw)
-        
-        # Nominal gaji
-        gaji_pokok = float(sheet.cell(r, 34).value or sheet.cell(r, 7).value or 0)
-        tunj_posisi = float(sheet.cell(r, 35).value or sheet.cell(r, 8).value or 0)
-        tunj_kehadiran = float(sheet.cell(r, 36).value or sheet.cell(r, 14).value or 0)
-        lembur_wfa = float(sheet.cell(r, 37).value or sheet.cell(r, 18).value or 0)
-        bonus_kinerja = float(sheet.cell(r, 38).value or sheet.cell(r, 21).value or 0)
-        pendapatan_lain = float(sheet.cell(r, 39).value or sheet.cell(r, 22).value or 0)
-        
-        # Potongan
-        potongan_kehadiran = float(sheet.cell(r, 40).value or sheet.cell(r, 27).value or 0)
-        potongan_lain = 0.0
-        
+        nama_clean = str(nama).strip()
+        # id = urutan unik (kolom "No." di sheet bisa duplikat); no = nomor tampilan di slip
+        emp_id = len(employees) + 1
+        no_val = cell(r, "no")
+        try:
+            no = int(float(no_val)) if no_val is not None else emp_id
+        except (ValueError, TypeError):
+            no = emp_id
+
+        bagian = cell(r, "bagian") or "OPERASIONAL"
+        posisi = cell(r, "posisi") or ""
+        rek = clean_rekening(cell(r, "rekening"))
+
+        # Nominal gaji (blok ringkasan a-f)
+        gaji_pokok = _num(cell(r, "gaji_pokok"))
+        tunj_posisi = _num(cell(r, "tunjangan"))
+        tunj_kehadiran = _num(cell(r, "tunj_kehadiran"))
+        lembur_wfa = _num(cell(r, "lembur"))
+        bonus_kinerja = _num(cell(r, "bonus"))
+        pendapatan_lain = _num(cell(r, "pendapatan_lain"))
+
+        # Potongan (g, h)
+        potongan_kehadiran = _num(cell(r, "potongan_kehadiran"))
+        potongan_lain = _num(cell(r, "potongan_lain"))
+
         total_bonus_kotor = tunj_posisi + tunj_kehadiran + lembur_wfa + bonus_kinerja + pendapatan_lain
         penerimaan_kotor = gaji_pokok + total_bonus_kotor
         total_potongan = potongan_kehadiran + potongan_lain
         thp = penerimaan_kotor - total_potongan
-        
+
         employees.append({
-            "id": no,
+            "id": emp_id,
             "no": str(no),
             "nama": nama_clean,
             "bagian": str(bagian).strip(),
@@ -262,7 +320,7 @@ def parse_workbook(wb: openpyxl.Workbook):
             "total_penghasilan": thp,
             "terbilang": terbilang(thp)
         })
-    
+
     return employees, detected_period, detected_slip_date
 
 def get_base64_image(image_path: str) -> str:
@@ -298,9 +356,9 @@ def render_slip_html(emp: Dict[str, Any], config: Dict[str, Any], preview_mode: 
     signer_title = config.get("signer_title", "Bagian Keuangan,")
     signer_name = config.get("signer_name", "Reza Fauzi")
     
-    label_2a = config.get("label_2a", "Tunjangan Kehadiran")
+    label_2a = config.get("label_2a", "Tunjangan Jabatan")
     label_2b = config.get("label_2b", "Bonus Kehadiran")
-    label_2c = config.get("label_2c", "Lembur/Tunj.Hadir Kary. WFA")
+    label_2c = config.get("label_2c", "Lembur")
     label_2d = config.get("label_2d", "Bonus Kinerja SLK")
     label_2e = config.get("label_2e", "Lain-Lain")
     template = config.get("template", "default")
@@ -856,34 +914,52 @@ def render_slip_html(emp: Dict[str, Any], config: Dict[str, Any], preview_mode: 
 </html>"""
     return html
 
+def find_chrome() -> str:
+    """Cari Chrome/Chromium: env CHROME_PATH, lalu macOS, lalu PATH (Linux/Docker)."""
+    candidates = [
+        os.environ.get("CHROME_PATH", "").strip(),
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    ]
+    for c in candidates:
+        if c and os.path.exists(c):
+            return c
+    for name in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser"):
+        found = shutil.which(name)
+        if found:
+            return found
+    raise RuntimeError("Chrome/Chromium tidak ditemukan. Pasang Chromium atau set env CHROME_PATH.")
+
 def generate_pdf_from_html(html_content: str, output_pdf_path: str) -> bool:
     """
-    Menggunakan Google Chrome headless bawaan MacOS untuk menghasilkan PDF
+    Menggunakan Chrome/Chromium headless untuk menghasilkan PDF
     yang 100% presisi dan identik dengan hasil browser.
     """
     with tempfile.NamedTemporaryFile(suffix=".html", delete=False, mode="w", encoding="utf-8") as f:
         tmp_html_path = f.name
         f.write(html_content)
 
-    chrome_path = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-    if not os.path.exists(chrome_path):
-        chrome_path = "google-chrome"
-
+    # Profil sementara per proses agar tidak bentrok dengan Chrome lain / proses paralel
+    profile_dir = tempfile.mkdtemp(prefix="chrome-profile-")
     cmd = [
-        chrome_path,
+        find_chrome(),
         "--headless",
         "--disable-gpu",
         "--no-pdf-header-footer",
+        f"--user-data-dir={profile_dir}",
         f"--print-to-pdf={output_pdf_path}",
-        f"file://{tmp_html_path}"
     ]
+    if sys.platform != "darwin":
+        # Di container (root, /dev/shm kecil) Chromium butuh flag ini
+        cmd += ["--no-sandbox", "--disable-dev-shm-usage"]
+    cmd.append(f"file://{tmp_html_path}")
 
     try:
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20)
+        subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
         return os.path.exists(output_pdf_path) and os.path.getsize(output_pdf_path) > 0
     finally:
         if os.path.exists(tmp_html_path):
             os.remove(tmp_html_path)
+        shutil.rmtree(profile_dir, ignore_errors=True)
 
 def batch_generate_zip(employees: List[Dict[str, Any]], config: Dict[str, Any], output_zip_path: str) -> str:
     """

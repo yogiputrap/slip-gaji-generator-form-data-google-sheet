@@ -1,14 +1,32 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.DS_Store
-.env
 venv/
 .venv/
 env/
-output/*.pdf
-output/*.zip
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Rahasia & kredensial (simpan hanya .env.example)
+.env
+.env.*
+!.env.example
+
+# Data gaji/karyawan: hasil generate, file sheet, dan aset pribadi
+output/
+data/
+test_*.pdf
 test_*.png
+*.xlsx
+*.xls
+*.csv
+assets/custom_*
+
+# Sementara
 *.tmp
 tmp/

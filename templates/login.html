@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk · Sesar Slip Gaji</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --b: #e5e7eb;
+      --bh: #f9fafb;
+      --t: #111827;
+      --t2: #6b7280;
+      --t3: #9ca3af;
+      --green: #16a34a;
+      --gdark: #15803d;
+      --gbg: #dcfce7;
+      --red: #dc2626;
+      --rbg: #fef2f2;
+      --r8: 8px;
+      --r12: 12px;
+      --fn: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--fn);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--t);
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font-family: inherit; }
+
+    /* ─── 60 / 40 ─── */
+    .split {
+      display: grid;
+      grid-template-columns: 60fr 40fr;
+      min-height: 100vh;
+    }
+
+    /* Panel kiri (60%) */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 56px;
+      background:
+        radial-gradient(900px 500px at 15% 0%, #bbf7d0 0%, transparent 60%),
+        radial-gradient(700px 500px at 100% 100%, #d9f99d 0%, transparent 55%),
+        #ecfdf3;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(22,163,74,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22,163,74,.08) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 30%, transparent 75%);
+              mask-image: radial-gradient(ellipse at 50% 50%, #000 30%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero > * { position: relative; }
+    .brand { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+    .hero-logo {
+      width: min(520px, 86%);
+      margin: 0 auto;
+      mix-blend-mode: multiply;
+    }
+    .hero-copy h2 {
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      max-width: 22ch;
+    }
+    .hero-copy p {
+      margin-top: 10px;
+      color: var(--t2);
+      max-width: 44ch;
+    }
+
+    /* Panel kanan (40%) */
+    .panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+    }
+    .form-wrap { width: 100%; max-width: 360px; }
+    .form-wrap h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .sub { margin-top: 4px; color: var(--t2); }
+
+    form { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 6px; }
+    .field { position: relative; }
+    input[type=text], input[type=password] {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--b);
+      border-radius: var(--r8);
+      background: #fff;
+      font-size: 0.92rem;
+      color: var(--t);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--gbg); }
+    input[type=password] { padding-right: 56px; }
+    .toggle {
+      position: absolute; right: 6px; bottom: 6px;
+      height: 32px; padding: 0 10px;
+      background: transparent; border: none; border-radius: 6px;
+      color: var(--t2); font-size: 0.74rem; font-weight: 600; cursor: pointer;
+    }
+    .toggle:hover { background: var(--bh); color: var(--t); }
+
+    .error {
+      display: none;
+      padding: 10px 12px;
+      border-radius: var(--r8);
+      background: var(--rbg);
+      color: var(--red);
+      font-size: 0.82rem;
+    }
+    .error.show { display: block; }
+
+    .submit {
+      height: 46px;
+      border: none;
+      border-radius: var(--r8);
+      background: var(--t);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .05s;
+    }
+    .submit:hover { background: #000; }
+    .submit:active { transform: translateY(1px); }
+    .submit:disabled { opacity: .6; cursor: default; }
+    .foot { margin-top: 28px; font-size: 0.74rem; color: var(--t3); }
+
+    /* Mobile: panel kiri disembunyikan, form penuh */
+    @media (max-width: 860px) {
+      .split { grid-template-columns: 1fr; }
+      .hero { display: none; }
+      .panel { min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="split">
+    <section class="hero" aria-hidden="true">
+      <div class="brand">sesar.</div>
+      <img class="hero-logo" src="/assets/logo_default.png" alt="">
+      <div class="hero-copy">
+        <h2>Slip gaji karyawan, rapi dalam hitungan detik.</h2>
+        <p>Tarik data dari rekap penggajian, pilih karyawan, lalu unduh slip PDF satuan atau sekaligus.</p>
+      </div>
+    </section>
+
+    <main class="panel">
+      <div class="form-wrap">
+        <h1>Masuk</h1>
+        <p class="sub">Gunakan akun admin untuk membuka dashboard slip gaji.</p>
+
+        <form method="post" action="/login" id="loginForm">
+          <div class="error" id="err" role="alert"></div>
+
+          <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+          </div>
+
+          <div>
+            <label for="password">Password</label>
+            <div class="field">
+              <input type="password" id="password" name="password" autocomplete="current-password" required>
+              <button type="button" class="toggle" id="toggle" aria-label="Tampilkan password">Lihat</button>
+            </div>
+          </div>
+
+          <button type="submit" class="submit" id="submit">Masuk</button>
+        </form>
+
+        <p class="foot">Sesar Lembang Kalcer · Slip Gaji</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var messages = {
+        '1': 'Username atau password salah.',
+        '2': 'Terlalu banyak percobaan. Coba lagi dalam 1 menit.',
+        '3': 'Login belum dikonfigurasi. Atur AUTH_USERNAME dan AUTH_PASSWORD di environment server.'
+      };
+      var code = new URLSearchParams(location.search).get('e');
+      var err = document.getElementById('err');
+      if (code && messages[code]) {
+        err.textContent = messages[code];
+        err.classList.add('show');
+      }
+
+      var pw = document.getElementById('password');
+      var toggle = document.getElementById('toggle');
+      toggle.addEventListener('click', function () {
+        var show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        toggle.textContent = show ? 'Sembunyi' : 'Lihat';
+        toggle.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+      });
+
+      document.getElementById('loginForm').addEventListener('submit', function () {
+        var b = document.getElementById('submit');
+        b.disabled = true; b.textContent = 'Memproses…';
+      });
+    })();
+  </script>
+</body>
+</html>

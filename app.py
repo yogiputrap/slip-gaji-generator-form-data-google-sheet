@@ -3,29 +3,93 @@ import re
 import io
 import json
 import base64
+import shutil
 import tempfile
 from typing import Optional, List
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, FileResponse, Response, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse, Response, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 import generator
+import auth
 
 app = FastAPI(title="Auto Slip Gaji Generator")
 
 # Pastikan direktori tersedia
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR = os.path.join(BASE_DIR, "assets")
-OUTPUT_DIR = os.path.join(BASE_DIR, "output")
+# DATA_DIR: lokasi data yang bisa ditulis (unggahan logo/TTD, hasil PDF). Saat deploy (Docker/Dokploy)
+# arahkan ke volume persisten, mis. /data. Default: folder proyek (pengembangan lokal).
+DATA_DIR = os.environ.get("DATA_DIR", "").strip() or BASE_DIR
+ASSETS_DIR = os.path.join(DATA_DIR, "assets")
+OUTPUT_DIR = os.path.join(DATA_DIR, "output")
+BUNDLED_ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 os.makedirs(ASSETS_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Salin aset bawaan (logo default dll.) ke volume data bila belum ada; file yang sudah ada tidak ditimpa
+if os.path.abspath(ASSETS_DIR) != os.path.abspath(BUNDLED_ASSETS_DIR) and os.path.isdir(BUNDLED_ASSETS_DIR):
+    for _name in os.listdir(BUNDLED_ASSETS_DIR):
+        _src, _dst = os.path.join(BUNDLED_ASSETS_DIR, _name), os.path.join(ASSETS_DIR, _name)
+        if os.path.isfile(_src) and not os.path.exists(_dst):
+            shutil.copy2(_src, _dst)
 os.makedirs(STATIC_DIR, exist_ok=True)
 
 app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+# ─── Autentikasi (kredensial dari env, tanpa database) ───
+# Hanya halaman login dan logonya yang publik; /assets lain (mis. tanda tangan) tetap terkunci.
+PUBLIC_PATHS = {"/login", "/assets/logo_default.png"}
+
+if not auth.is_configured():
+    print("[PERINGATAN] AUTH_USERNAME/AUTH_PASSWORD belum di-set: login ditolak, dashboard tidak bisa diakses.")
+
+@app.middleware("http")
+async def require_login(request: Request, call_next):
+    path = request.url.path
+    if path in PUBLIC_PATHS or auth.verify_token(request.cookies.get(auth.COOKIE_NAME)):
+        return await call_next(request)
+    if path.startswith("/api/"):
+        return JSONResponse({"detail": "Belum login"}, status_code=401)
+    return RedirectResponse("/login", status_code=303)
+
+def _client_ip(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
+
+@app.get("/login", response_class=HTMLResponse)
+def login_page(request: Request):
+    if auth.verify_token(request.cookies.get(auth.COOKIE_NAME)):
+        return RedirectResponse("/", status_code=303)
+    with open(os.path.join(BASE_DIR, "templates", "login.html"), "r", encoding="utf-8") as f:
+        return HTMLResponse(f.read(), headers={"Cache-Control": "no-store"})
+
+@app.post("/login")
+def login(request: Request, username: str = Form(""), password: str = Form("")):
+    ip = _client_ip(request)
+    if not auth.is_configured():
+        return RedirectResponse("/login?e=3", status_code=303)
+    if auth.is_locked(ip):
+        return RedirectResponse("/login?e=2", status_code=303)
+    if not auth.check_credentials(username, password):
+        auth.record_fail(ip)
+        return RedirectResponse("/login?e=1", status_code=303)
+    auth.clear_fails(ip)
+    resp = RedirectResponse("/", status_code=303)
+    resp.set_cookie(
+        auth.COOKIE_NAME, auth.make_token(),
+        max_age=auth.session_seconds(), httponly=True, samesite="lax",
+        secure=request.url.scheme == "https",
+    )
+    return resp
+
+@app.post("/logout")
+def logout():
+    resp = RedirectResponse("/login", status_code=303)
+    resp.delete_cookie(auth.COOKIE_NAME)
+    return resp
 
 # State konfigurasi default
 CURRENT_CONFIG = {
@@ -41,9 +105,9 @@ CURRENT_CONFIG = {
     "slip_date": "Bandung, 29 September 2026",
     "signer_title": "Bagian Keuangan,",
     "signer_name": "Reza Fauzi",
-    "label_2a": "Tunjangan Kehadiran",
+    "label_2a": "Tunjangan Jabatan",
     "label_2b": "Bonus Kehadiran",
-    "label_2c": "Lembur/Tunj.Hadir Kary. WFA",
+    "label_2c": "Lembur",
     "label_2d": "Bonus Kinerja SLK",
     "label_2e": "Lain-Lain",
     "template": "default"
@@ -184,13 +248,45 @@ async def upload_signature(file: UploadFile = File(...)):
         mime = f"image/{ext}" if ext != "svg" else "image/svg+xml"
         b64 = f"data:{mime};base64,{base64.b64encode(content).decode('utf-8')}"
         CURRENT_CONFIG["signature_data_uri"] = b64
-        custom_sig_path = os.path.join(ASSETS_DIR, f"custom_signature{os.path.splitext(file.filename)[1]}")
+        # Nama unik per file agar tanda tangan lama tidak tertimpa dan bisa dipilih lagi
+        stem = re.sub(r"[^A-Za-z0-9_-]+", "_", os.path.splitext(os.path.basename(file.filename))[0]).strip("_")
+        stem = re.sub(r"^custom_signature_?", "", stem) or "ttd"
+        custom_sig_path = os.path.join(ASSETS_DIR, f"{SIGNATURE_PREFIX}_{stem}{os.path.splitext(file.filename)[1].lower()}")
         with open(custom_sig_path, "wb") as f:
             f.write(content)
         CURRENT_CONFIG["signature_path"] = custom_sig_path
         return {"status": "success", "signature_preview": b64}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Gagal upload tanda tangan: {str(e)}")
+
+SIGNATURE_PREFIX = "custom_signature"
+SIGNATURE_EXTS = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg")
+
+def _list_signature_files() -> List[str]:
+    return sorted(
+        f for f in os.listdir(ASSETS_DIR)
+        if f.startswith(SIGNATURE_PREFIX) and f.lower().endswith(SIGNATURE_EXTS)
+    )
+
+@app.get("/api/signatures")
+def list_signatures():
+    current = os.path.basename(CURRENT_CONFIG.get("signature_path", ""))
+    return {
+        "signatures": [
+            {"name": f, "url": f"/assets/{f}", "selected": f == current}
+            for f in _list_signature_files()
+        ]
+    }
+
+@app.post("/api/select-signature")
+def select_signature(name: str = Form(...)):
+    # Hanya nama file yang ada di daftar assets (cegah path traversal)
+    if name not in _list_signature_files():
+        raise HTTPException(status_code=404, detail="Tanda tangan tidak ditemukan di folder assets")
+    path = os.path.join(ASSETS_DIR, name)
+    CURRENT_CONFIG["signature_data_uri"] = ""
+    CURRENT_CONFIG["signature_path"] = path
+    return {"status": "success", "signature_preview": generator.get_base64_image(path), "name": name}
 
 @app.post("/api/clear-signature")
 def clear_signature():
