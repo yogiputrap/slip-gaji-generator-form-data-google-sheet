@@ -52,13 +52,21 @@ Salin `.env.example` ke `.env` lalu isi `AUTH_USERNAME`, `AUTH_PASSWORD`, dan `A
 
 ### Deploy ke Dokploy
 
-Proyek ini membawa `Dockerfile` (Python + Chromium + font Carlito sebagai pengganti Calibri).
+Proyek ini membawa `Dockerfile` (Python + Chromium + font Carlito sebagai pengganti Calibri) dan `docker-compose.yml`.
 
-1. Buat aplikasi baru di Dokploy, sumber: repo Git ini, **Build Type: Dockerfile**.
+**Opsi A: service bertipe Compose (disarankan)**
+
+1. Buat service **Compose** di Dokploy, sumber: repo Git ini, **Compose Path** `./docker-compose.yml`.
 2. Tab **Environment**, isi: `AUTH_USERNAME`, `AUTH_PASSWORD`, `AUTH_SECRET` (lihat `.env.example`).
-3. Tab **Advanced → Volumes**, tambah volume (Volume Mount) dengan **Mount Path `/data`**. Unggahan logo/TTD disimpan di sini agar tidak hilang saat redeploy.
-4. Tab **Domains**, isi domain dan **Container Port `8000`**, aktifkan HTTPS (Let's Encrypt).
-5. Deploy.
+3. Tab **Domains**: isi domain, **Service Name** `app`, **Container Port** `8000`, aktifkan HTTPS (Let's Encrypt).
+4. Deploy. Volume `/data` (unggahan logo/TTD) dibuat otomatis oleh compose.
+
+**Opsi B: service bertipe Application**
+
+1. Sumber repo Git ini, **Build Type: Dockerfile**.
+2. Isi Environment seperti di atas.
+3. **Advanced → Volumes**: tambah Volume Mount dengan **Mount Path `/data`**.
+4. **Domains**: Container Port `8000`, aktifkan HTTPS.
 
 Catatan: pilihan tanda tangan/logo aktif dan konfigurasi slip disimpan di memori, jadi dipilih ulang setelah container restart.
 

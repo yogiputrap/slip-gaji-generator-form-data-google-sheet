@@ -1,0 +1,25 @@
+# Untuk Dokploy (service bertipe Compose).
+# Isi AUTH_USERNAME, AUTH_PASSWORD, AUTH_SECRET di tab Environment Dokploy.
+# Domain & HTTPS diatur di tab Domains: Service Name "app", Container Port 8000.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      AUTH_USERNAME: ${AUTH_USERNAME:?isi AUTH_USERNAME di Environment}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:?isi AUTH_PASSWORD di Environment}
+      AUTH_SECRET: ${AUTH_SECRET:-}
+      AUTH_SESSION_HOURS: ${AUTH_SESSION_HOURS:-12}
+    volumes:
+      - slip-data:/data
+    expose:
+      - "8000"
+    networks:
+      - dokploy-network
+
+volumes:
+  slip-data:
+
+networks:
+  dokploy-network:
+    external: true
