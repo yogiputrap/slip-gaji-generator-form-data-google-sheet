@@ -888,6 +888,9 @@
     /* ─── MOBILE: PERBAIKAN TATA LETAK ─── */
     .share-name small { overflow: hidden; text-overflow: ellipsis; }
     @media (max-width: 1024px) {
+      /* 100vh di browser ponsel lebih tinggi dari area terlihat (bar alamat), sehingga bagian bawah terpotong */
+      .layout, .main { height: 100vh; height: 100dvh; }
+      .content { min-height: 0; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
       /* cegah grid melebar mengikuti isi terlebar (penyebab halaman terpotong di ponsel) */
       .layout { grid-template-columns: minmax(0, 1fr); }
       .main, .content, .split > *, .rail > * { min-width: 0; }
