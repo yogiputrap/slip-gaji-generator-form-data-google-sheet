@@ -680,6 +680,40 @@
     }
     .modal-close:hover { background: var(--bs); }
     .modal-body { flex: 1; overflow: auto; min-height: 0; }
+
+    /* ─── MODAL LINK BERBAGI ─── */
+    #shareModal .modal-box { max-width: 640px; height: auto; max-height: 90vh; }
+    .share-note {
+      margin: 14px 20px 0; padding: 10px 12px;
+      background: #fffbeb; color: #92400e;
+      border: 1px solid #fde68a; border-radius: var(--r8);
+      font-size: 0.76rem; line-height: 1.45;
+    }
+    .share-prog { margin: 12px 20px 4px; }
+    .share-prog-txt { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--t2); margin-bottom: 5px; }
+    .share-prog-bar { height: 5px; background: var(--bs); border-radius: 99px; overflow: hidden; }
+    .share-prog-bar > i { display: block; height: 100%; width: 0; background: var(--green); transition: width 0.2s; }
+    .share-list { padding: 6px 20px 14px; }
+    .share-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; border-bottom: 1px solid var(--bs);
+    }
+    .share-row:last-child { border-bottom: none; }
+    .share-ico {
+      width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; font-weight: 700; background: var(--bs); color: var(--t3);
+    }
+    .share-row.ok .share-ico { background: var(--gbg); color: var(--green); }
+    .share-row.err .share-ico { background: #fee2e2; color: #dc2626; }
+    .share-row.busy .share-ico { background: var(--bs); color: var(--t2); }
+    .share-name { flex: 1; min-width: 0; font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .share-name small { display: block; font-weight: 400; font-size: 0.7rem; color: var(--t3); }
+    .share-acts { display: flex; gap: 4px; flex-shrink: 0; }
+    .share-row:not(.ok) .share-acts .only-ok { display: none; }
+    .share-row.revoked .share-name { text-decoration: line-through; color: var(--t3); }
+    .btn-danger-o { color: #dc2626; border-color: #fecaca; background: #fff; }
+    .btn-danger-o:hover { background: #fef2f2; }
     .modal-ft {
       display: flex;
       align-items: center;
@@ -1036,6 +1070,10 @@
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="selectAll(true)">Pilih Semua</button>
                 <button class="btn btn-outline btn-sm" onclick="selectAll(false)">Reset</button>
+                <button class="btn btn-dark btn-sm" id="shareBtn" onclick="openShareModal()" title="Buat link slip untuk dibagikan ke WhatsApp">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  Link WhatsApp
+                </button>
               </div>
             </div>
             <div style="overflow-x:auto">
@@ -1287,6 +1325,33 @@
       <div class="modal-ft">
         <button class="btn btn-outline btn-sm" onclick="closeConfigModal()">Batal</button>
         <button class="btn btn-dark btn-sm" onclick="saveConfig()">Simpan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SHARE MODAL ═══════ -->
+  <div class="modal-bg" id="shareModal" onclick="if(event.target===this)closeShareModal()">
+    <div class="modal-box">
+      <div class="modal-hd">
+        <span>Link Slip untuk Dibagikan</span>
+        <button class="modal-close" onclick="closeShareModal()" aria-label="Tutup">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="share-note">
+          <strong>Kirim tiap link hanya ke karyawan yang bersangkutan, jangan di grup.</strong>
+          Siapa pun yang memegang link bisa membuka slip itu tanpa login. Link berlaku <span id="shareTtl">30</span> hari
+          dan tetap sama bila dibuat ulang (isi slip ikut diperbarui).
+        </div>
+        <div class="share-prog">
+          <div class="share-prog-txt"><span id="shareProgTxt">Menyiapkan…</span><span id="shareProgNum"></span></div>
+          <div class="share-prog-bar"><i id="shareProgBar"></i></div>
+        </div>
+        <div class="share-list" id="shareList"></div>
+      </div>
+      <div class="modal-ft">
+        <button class="btn btn-outline btn-danger-o btn-sm" onclick="revokeAllShare()">Cabut semua link</button>
+        <button class="btn btn-outline btn-sm" id="shareCopyAll" onclick="copyAllShare()">Salin semua (daftar)</button>
+        <button class="btn btn-dark btn-sm" onclick="closeShareModal()">Selesai</button>
       </div>
     </div>
   </div>
@@ -1557,6 +1622,7 @@
           <div class="act">
             <button class="btn btn-outline btn-xs" onclick="openPreview(${e.id})">Preview</button>
             <a class="btn btn-outline btn-xs" href="/api/download-pdf/${e.id}" target="_blank">PDF</a>
+            <button class="btn btn-outline btn-xs" onclick="copyShareLink(${e.id}, this)" title="Buat & salin link slip untuk dibagikan (WhatsApp)">Link</button>
           </div>
         </td>
       </tr>
@@ -1678,6 +1744,8 @@
         zipBtn.disabled = false;
       }
     }
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) shareBtn.disabled = (n === 0);
     const mobZipBtn = document.getElementById('mobZipBtn');
     if (mobZipBtn) {
       if (n === 0) {
@@ -1728,6 +1796,131 @@
   }
 
   /* ── PREVIEW MODAL ── */
+  /* ── LINK BERBAGI (WhatsApp) ── */
+  let shareItems = [];
+  let shareAbort = false;
+  let shareTtlDays = 30;
+
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch (_) { window.prompt('Salin teks ini:', text); return false; }
+  }
+  async function requestShare(id) {
+    const r = await fetch('/api/share/' + id, { method: 'POST' });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.detail || 'Gagal membuat link');
+    if (data.ttl_days) shareTtlDays = data.ttl_days;
+    return data.url;
+  }
+  async function copyShareLink(id, btn) {
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      const url = await requestShare(id);
+      await copyText(url);
+      showToast(`✓ Link disalin (berlaku ${shareTtlDays} hari)`);
+    } catch (e) { showToast('⚠ ' + (e.message || 'Koneksi gagal')); }
+    finally { btn.disabled = false; btn.textContent = label; }
+  }
+
+  function shareMessage(item) {
+    return `Halo ${item.nama}, berikut slip gaji ${cfg.period || ''}:\n${item.url}`;
+  }
+  function mkBtn(label, cls, onclick) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn btn-xs ' + cls; b.textContent = label; b.onclick = onclick;
+    return b;
+  }
+  function buildShareRow(item) {
+    const row = document.createElement('div'); row.className = 'share-row';
+    const ico = document.createElement('span'); ico.className = 'share-ico';
+    const name = document.createElement('div'); name.className = 'share-name';
+    const acts = document.createElement('div'); acts.className = 'share-acts';
+    row.append(ico, name, acts);
+    item.el = { row, ico, name, acts };
+    return row;
+  }
+  function renderShareRow(item) {
+    const { row, ico, name, acts } = item.el;
+    row.className = 'share-row ' + item.state;
+    ico.textContent = item.state === 'ok' ? '✓' : item.state === 'err' ? '!' : item.state === 'busy' ? '…' : item.state === 'revoked' ? '–' : '';
+    name.textContent = item.nama;
+    const sub = document.createElement('small');
+    sub.textContent = item.state === 'err' ? item.err : item.state === 'revoked' ? 'Link dicabut' : item.state === 'busy' ? 'Membuat link…' : item.state === 'wait' ? 'Menunggu' : item.url;
+    name.appendChild(sub);
+    acts.innerHTML = '';
+    if (item.state === 'ok') {
+      acts.append(
+        mkBtn('Salin', 'btn-outline only-ok', async () => { await copyText(item.url); showToast('✓ Link ' + item.nama + ' disalin'); }),
+        mkBtn('WA', 'btn-dark only-ok', () => window.open('https://wa.me/?text=' + encodeURIComponent(shareMessage(item)), '_blank', 'noopener')),
+        mkBtn('Cabut', 'btn-outline btn-danger-o only-ok', () => revokeShare(item))
+      );
+    } else if (item.state === 'err' || item.state === 'revoked') {
+      acts.append(mkBtn(item.state === 'err' ? 'Coba lagi' : 'Buat lagi', 'btn-outline', () => retryShare(item)));
+    }
+  }
+  function updateShareProgress() {
+    const total = shareItems.length;
+    const done = shareItems.filter(i => i.state === 'ok' || i.state === 'err' || i.state === 'revoked').length;
+    const ok = shareItems.filter(i => i.state === 'ok').length;
+    const busy = shareItems.some(i => i.state === 'busy' || i.state === 'wait');
+    document.getElementById('shareProgBar').style.width = (total ? done / total * 100 : 0) + '%';
+    document.getElementById('shareProgNum').textContent = `${ok}/${total}`;
+    document.getElementById('shareProgTxt').textContent = busy ? 'Membuat link…' : `Selesai — ${ok} link siap dibagikan`;
+    document.getElementById('shareTtl').textContent = shareTtlDays;
+  }
+  async function makeShare(item) {
+    item.state = 'busy'; renderShareRow(item); updateShareProgress();
+    try { item.url = await requestShare(item.id); item.state = 'ok'; }
+    catch (e) { item.state = 'err'; item.err = e.message || 'Koneksi gagal'; }
+    renderShareRow(item); updateShareProgress();
+  }
+  async function retryShare(item) { await makeShare(item); }
+  async function openShareModal() {
+    const ids = getSelectedIds();
+    if (!ids.length) { showToast('Pilih minimal satu karyawan'); return; }
+    shareAbort = false;
+    shareItems = ids.map(id => ({ id, nama: employees.find(e => e.id === id)?.nama || ('#' + id), url: '', state: 'wait' }));
+    const list = document.getElementById('shareList');
+    list.innerHTML = '';
+    shareItems.forEach(it => { list.appendChild(buildShareRow(it)); renderShareRow(it); });
+    updateShareProgress();
+    document.getElementById('shareModal').classList.add('open');
+    for (const it of shareItems) {
+      if (shareAbort) break;
+      await makeShare(it);
+    }
+  }
+  function closeShareModal() {
+    shareAbort = true;
+    document.getElementById('shareModal').classList.remove('open');
+  }
+  async function revokeShare(item) {
+    try {
+      const r = await fetch('/api/share/' + item.id, { method: 'DELETE' });
+      if (!r.ok) throw new Error();
+      item.state = 'revoked'; item.url = ''; renderShareRow(item); updateShareProgress();
+      showToast('Link ' + item.nama + ' dicabut');
+    } catch (_) { showToast('⚠ Gagal mencabut link'); }
+  }
+  async function revokeAllShare() {
+    if (!confirm('Cabut SEMUA link slip yang pernah dibagikan? Link yang sudah dikirim ke karyawan tidak akan bisa dibuka lagi.')) return;
+    try {
+      const r = await fetch('/api/share', { method: 'DELETE' });
+      const data = await r.json();
+      if (!r.ok) throw new Error();
+      shareItems.forEach(it => { if (it.state === 'ok') { it.state = 'revoked'; it.url = ''; renderShareRow(it); } });
+      updateShareProgress();
+      showToast(`✓ ${data.revoked} link dicabut`);
+    } catch (_) { showToast('⚠ Gagal mencabut link'); }
+  }
+  async function copyAllShare() {
+    const ok = shareItems.filter(i => i.state === 'ok');
+    if (!ok.length) { showToast('Belum ada link yang siap'); return; }
+    await copyText(ok.map(i => `${i.nama}\n${i.url}`).join('\n\n'));
+    showToast(`✓ ${ok.length} link disalin (daftar untuk admin, jangan kirim ke grup)`);
+  }
+
   function openPreview(id) {
     activePreviewId = id;
     const emp = employees.find(e => e.id === id);

@@ -50,6 +50,18 @@ Dashboard dilindungi halaman login. Kredensial dibaca dari environment (tanpa da
 Salin `.env.example` ke `.env` lalu isi `AUTH_USERNAME`, `AUTH_PASSWORD`, dan `AUTH_SECRET`
 (`run.sh` memuat `.env` otomatis). Jika `AUTH_USERNAME`/`AUTH_PASSWORD` kosong, login ditolak.
 
+#### Berbagi slip lewat WhatsApp
+
+Semua endpoint `/api/*` dan halaman dashboard wajib login. Untuk mengirim slip ke karyawan (yang tidak punya login):
+
+1. Centang karyawan, klik **Link WhatsApp**. Aplikasi membuat PDF tiap karyawan (dengan indikator progres) dan membuat link `https://<domain>/s/<token>`.
+2. Di tiap baris: **Salin** (link), **WA** (membuka WhatsApp dengan pesan siap kirim), **Cabut** (link tidak bisa dibuka lagi).
+3. **Cabut semua link** dan **Salin semua (daftar)** ada di bagian bawah. Daftar itu untuk admin, jangan dikirim ke grup.
+
+Token 192-bit tidak bisa ditebak. Link kedaluwarsa otomatis (`SHARE_TTL_DAYS`, default 30 hari), dan membuat link lagi
+memakai token yang sama dengan slip terbaru. Siapa pun yang memegang link bisa membuka slip itu, jadi kirim hanya ke yang bersangkutan.
+Tombol **Link** di baris tabel menyalin satu link langsung.
+
 ### Deploy ke Dokploy
 
 Proyek ini membawa `Dockerfile` (Python + Chromium + font Carlito sebagai pengganti Calibri) dan `docker-compose.yml`.

@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 import generator
 import auth
+import share
 
 app = FastAPI(title="Auto Slip Gaji Generator")
 
@@ -23,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.environ.get("DATA_DIR", "").strip() or BASE_DIR
 ASSETS_DIR = os.path.join(DATA_DIR, "assets")
 OUTPUT_DIR = os.path.join(DATA_DIR, "output")
+SHARE_DIR = os.path.join(DATA_DIR, "shared")
 BUNDLED_ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
@@ -50,7 +52,8 @@ if not auth.is_configured():
 @app.middleware("http")
 async def require_login(request: Request, call_next):
     path = request.url.path
-    if path in PUBLIC_PATHS or auth.verify_token(request.cookies.get(auth.COOKIE_NAME)):
+    # /s/<token>: link berbagi slip (token acak, lihat share.py); sisanya wajib login
+    if path in PUBLIC_PATHS or path.startswith("/s/") or auth.verify_token(request.cookies.get(auth.COOKIE_NAME)):
         return await call_next(request)
     if path.startswith("/api/"):
         return JSONResponse({"detail": "Belum login"}, status_code=401)
@@ -337,6 +340,55 @@ def download_pdf(emp_id: int):
         raise HTTPException(status_code=500, detail="Gagal mengenerate file PDF")
     
     return FileResponse(path=output_path, filename=filename, media_type="application/pdf")
+
+def _share_key(emp: dict) -> str:
+    return f"{CURRENT_CONFIG.get('period', '')}|{emp['nama']}".lower()
+
+def _build_slip_pdf(emp: dict):
+    period_slug = CURRENT_CONFIG.get("period", "Bulan").replace(" ", "_")
+    safe_nama = re.sub(r'[^a-zA-Z0-9_\- ]', '', emp['nama']).strip()
+    filename = f"Slip_Gaji_{period_slug}_{safe_nama}.pdf"
+    output_path = os.path.join(OUTPUT_DIR, filename)
+    html = generator.render_slip_html(emp, CURRENT_CONFIG)
+    if not generator.generate_pdf_from_html(html, output_path):
+        raise HTTPException(status_code=500, detail="Gagal mengenerate file PDF")
+    return output_path, filename
+
+@app.post("/api/share/{emp_id}")
+def create_share_link(emp_id: int, request: Request):
+    emp = next((e for e in CACHED_EMPLOYEES if e["id"] == emp_id), None)
+    if not emp:
+        raise HTTPException(status_code=404, detail="Karyawan tidak ditemukan")
+    pdf_path, filename = _build_slip_pdf(emp)
+    token, exp = share.create(SHARE_DIR, _share_key(emp), filename, pdf_path)
+    base = str(request.base_url).rstrip("/")
+    return {"url": f"{base}/s/{token}", "expires_at": exp, "ttl_days": round(share.ttl_seconds() / 86400)}
+
+@app.delete("/api/share/{emp_id}")
+def revoke_share_link(emp_id: int):
+    emp = next((e for e in CACHED_EMPLOYEES if e["id"] == emp_id), None)
+    if not emp:
+        raise HTTPException(status_code=404, detail="Karyawan tidak ditemukan")
+    return {"revoked": share.revoke(SHARE_DIR, _share_key(emp))}
+
+@app.delete("/api/share")
+def revoke_all_share_links():
+    return {"revoked": share.revoke(SHARE_DIR)}
+
+@app.get("/s/{token}")
+def open_shared_slip(token: str, request: Request):
+    ip = "share:" + _client_ip(request)
+    if auth.is_locked(ip):
+        raise HTTPException(status_code=429, detail="Terlalu banyak percobaan, coba lagi nanti")
+    found = share.resolve(SHARE_DIR, token)
+    if not found:
+        auth.record_fail(ip)
+        raise HTTPException(status_code=404, detail="Link tidak valid atau sudah kedaluwarsa")
+    path, filename = found
+    return FileResponse(
+        path, media_type="application/pdf", filename=filename, content_disposition_type="inline",
+        headers={"Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer"},
+    )
 
 @app.post("/api/download-zip")
 def download_batch_zip(req: GenerateBatchRequest):
