@@ -884,6 +884,74 @@
       }
       .fg { grid-template-columns: 1fr; }
     }
+
+    /* ─── MOBILE: PERBAIKAN TATA LETAK ─── */
+    .share-name small { overflow: hidden; text-overflow: ellipsis; }
+    @media (max-width: 1024px) {
+      /* cegah grid melebar mengikuti isi terlebar (penyebab halaman terpotong di ponsel) */
+      .layout { grid-template-columns: minmax(0, 1fr); }
+      .main, .content, .split > *, .rail > * { min-width: 0; }
+      .split { grid-template-columns: minmax(0, 1fr); }
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 768px) {
+      .rail { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 768px) {
+      /* kartu sinkronisasi */
+      .sync-card { padding: 14px; gap: 12px; }
+      .sync-head { align-items: flex-start; gap: 10px; }
+      .sync-title { font-size: 0.95rem; }
+      .sync-head .banner-info { flex-wrap: nowrap; align-items: flex-start; gap: 7px; line-height: 1.4; margin-top: 2px; }
+      .sync-head .banner-dot { margin-top: 6px; }
+      .sync-btns { width: 100%; }
+      .sync-btns .btn { flex: 1; }
+
+      /* toolbar daftar karyawan */
+      .card-hd { padding: 12px; }
+      .card-hd-r { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+      .card-hd-r .search-wrap { grid-column: 1 / -1; }
+      .card-hd-r #shareBtn { grid-column: 1 / -1; }
+      .card-hd-r .btn { width: 100%; }
+
+      /* tabel -> kartu per karyawan */
+      table, tbody { display: block; width: 100%; }
+      thead { display: none; }
+      tbody tr {
+        display: grid;
+        grid-template-columns: 22px 1fr auto;
+        grid-template-areas: "ck nm thp" "ck dv thp" "act act act";
+        column-gap: 10px; row-gap: 6px;
+        padding: 12px;
+        border-bottom: 1px solid var(--bs);
+      }
+      tbody td { display: block; padding: 0; border: none; }
+      tbody tr:last-child { border-bottom: none; }
+      tbody tr.row-empty { display: block; }
+      tbody tr.row-empty td { padding: 32px 12px; }
+      .c-ck { grid-area: ck; padding-top: 2px; }
+      .c-no { display: none !important; }
+      .c-nm { grid-area: nm; min-width: 0; }
+      .c-dv { grid-area: dv; }
+      td.thp { grid-area: thp; align-self: center; font-size: 0.88rem; white-space: nowrap; }
+      .c-act { grid-area: act; margin-top: 2px; }
+      .act { justify-content: stretch; gap: 6px; }
+      .act .btn { flex: 1; padding: 7px 8px; }
+
+      /* modal link */
+      .share-note, .share-prog { margin-left: 14px; margin-right: 14px; }
+      .share-list { padding: 4px 14px 12px; }
+      .share-row { flex-wrap: wrap; gap: 6px 10px; }
+      .share-name { flex: 1 1 calc(100% - 34px); }
+      .share-acts { width: 100%; padding-left: 30px; }
+      .share-acts .btn { flex: 1; }
+      #shareModal .modal-ft { flex-wrap: wrap; gap: 6px; }
+      #shareModal .modal-ft .btn { flex: 1 1 auto; }
+    }
+    @media (max-width: 380px) {
+      .metric-val { font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -1091,7 +1159,7 @@
                   </tr>
                 </thead>
                 <tbody id="empTbody">
-                  <tr>
+                  <tr class="row-empty">
                     <td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">
                       Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik 'Tarik Sheet' atau Upload file Excel.
                     </td>
@@ -1239,6 +1307,13 @@
           Buka Google Sheet
         </a>
       </nav>
+
+      <form method="post" action="/logout" style="padding:0 8px 6px">
+        <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </button>
+      </form>
 
       <div style="border-top:1px solid var(--b);padding:10px 8px">
         <div style="display:flex;align-items:center;gap:9px;padding:8px 10px">
@@ -1602,23 +1677,23 @@
   function renderTable(list) {
     const tbody = document.getElementById('empTbody');
     if (!list || !list.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
+      tbody.innerHTML = '<tr class="row-empty"><td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
       updateSelCount();
       return;
     }
     tbody.innerHTML = list.map(e => `
       <tr>
-        <td><input type="checkbox" class="ck emp-check" value="${e.id}" onchange="updateSelCount()" checked></td>
-        <td style="color:var(--t3);font-size:0.76rem">${e.no}</td>
-        <td>
+        <td class="c-ck"><input type="checkbox" class="ck emp-check" value="${e.id}" onchange="updateSelCount()" checked></td>
+        <td class="c-no" style="color:var(--t3);font-size:0.76rem">${e.no}</td>
+        <td class="c-nm">
           <div class="emp-nm">${e.nama}</div>
           <div class="emp-pos">${e.posisi || '—'}</div>
         </td>
-        <td><span class="chip">${e.bagian}</span></td>
+        <td class="c-dv"><span class="chip">${e.bagian}</span></td>
         <td class="col-rek"><span class="rek">${e.rekening || '—'}</span></td>
         <td class="col-gp" style="text-align:right;color:var(--t2);font-size:0.78rem">${fmtRp(e.gaji_pokok)}</td>
         <td class="thp">${fmtRp(e.total_penghasilan)}</td>
-        <td>
+        <td class="c-act">
           <div class="act">
             <button class="btn btn-outline btn-xs" onclick="openPreview(${e.id})">Preview</button>
             <a class="btn btn-outline btn-xs" href="/api/download-pdf/${e.id}" target="_blank">PDF</a>
