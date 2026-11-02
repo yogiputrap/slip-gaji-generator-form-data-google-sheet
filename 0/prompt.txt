@@ -1,0 +1,68 @@
+saya udah install entire cli, coba tesh push ─40115-c02h842yq05d@MacBook-Pro-2 ~ 
+╰─$ curl -fsSL https://entire.com/install.sh | bash
+==> Installing Entire CLI...
+==> Detected platform: darwin/arm64
+==> Fetching latest stable version...
+==> Installing version: 0.12.2
+==> Downloading entire_darwin_arm64.tar.gz from https://install.entire.com...
+==> Verifying checksum...
+==> Checksum verified (https://install.entire.com)
+==> Extracting...
+==> Installing to /Users/40115-c02h842yq05d/.local/bin...
+==> Directory ready
+==> Entire CLI installed to /Users/40115-c02h842yq05d/.local/bin/entire
+==> Running post-install actions...
+✓ Shell completion added to /Users/40115-c02h842yq05d/.zshrc
+  Restart your shell to activate
+╭─40115-c02h842yq05d@MacBook-Pro-2 ~ 
+╰─$ entire login
+Logging in to https://auth.entire.io
+
+Login URL:
+  https://auth.entire.io/authorize?client_id=entire-cli&REDACTED&code_challenge_method=S256&redirect_uri=http%3A%2F%2F127.0.0.1%3A59322%2Fcallback&response_type=code&scope=cli+offline_access&REDACTED
+
+[Enter] Open browser  [c] Copy URL
+Waiting for sign-in… 
+✓ Opened browser.
+✓ Login complete (signed in at https://sg.auth.entire.io).
+╭─40115-c02h842yq05d@MacBook-Pro-2 ~ 
+╰─$ entire enable
+Not a git repository. Please run 'entire enable' from within a git repository, or pass --init-repo to initialize one here.
+╭─40115-c02h842yq05d@MacBook-Pro-2 ~ 
+╰─$ cd Documents/slip-gaji                                                                                                                                                                                                                                                        1 ↵
+╭─40115-c02h842yq05d@MacBook-Pro-2 ~/Documents/slip-gaji ‹main› 
+╰─$ entire enable
+  Selected agents: Antigravity, Claude Code, Codex
+  ✓ Installed hooks
+  ✓ Configured project
+    .entire/settings.json
+
+Ready.
+
+Make sure to commit these files to your Git repo so Entire works across worktrees and clones:
+  .entire/settings.json
+  .entire/.gitignore
+  .agents/hooks.json
+  .claude/settings.json
+  .codex/hooks.json
+✓ Committed them to main
+
+Checkpoints will be uploaded when you push to origin.
+  They contain your agent transcripts. If that repo is public, anyone can read them.
+  Secret redaction is best effort, not bulletproof. Review with `entire checkpoint explain`.
+  To stop uploads: `entire configure --local --skip-push-sessions`
+  To use a separate private repo: `entire configure --local --checkpoint-remote github:<owner>/<repo>`
+╭─40115-c02h842yq05d@MacBook-Pro-2 ~/Documents/slip-gaji ‹main› 
+╰─$
+
+---
+
+itu otomatis tanpa commit dan push entire belajar dan ingat?
+
+---
+
+cari skill audit ui/ux di agy aada apa aja ya?
+
+---
+
+gpu masih 58% nih gimana
