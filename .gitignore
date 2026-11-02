@@ -30,3 +30,10 @@ assets/custom_*
 # Sementara
 *.tmp
 tmp/
+
+# Skill hasil instalasi (npx skills add) dan dokumen desain lokal
+.agents/
+.claude/skills/
+skills-lock.json
+design-plans/
+DESIGN.md

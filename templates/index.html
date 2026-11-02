@@ -24,6 +24,32 @@
       --r16: 16px;
       --rp: 9999px;
       --fn: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* ─── SPACING SCALE ───
+         Skala tetap untuk padding/margin/gap. Semua nilai di bawah ini
+         adalah nilai yang sudah dipakai di komponen sebelum tokenisasi;
+         kode baru WAJIB memilih dari daftar ini, bukan menulis angka bebas. */
+      --sp-1: 1px;
+      --sp-2: 2px;
+      --sp-3: 3px;
+      --sp-4: 4px;
+      --sp-5: 5px;
+      --sp-6: 6px;
+      --sp-7: 7px;
+      --sp-8: 8px;
+      --sp-9: 9px;
+      --sp-10: 10px;
+      --sp-11: 11px;
+      --sp-12: 12px;
+      --sp-13: 13px;
+      --sp-14: 14px;
+      --sp-16: 16px;
+      --sp-18: 18px;
+      --sp-20: 20px;
+      --sp-24: 24px;
+      --sp-30: 30px;
+      --sp-32: 32px;
+      --sp-48: 48px;
     }
 
     /* ─── RESET ─── */
@@ -69,7 +95,7 @@
     .sidebar::-webkit-scrollbar { display: none; }
 
     .sb-brand {
-      padding: 20px 18px 16px;
+      padding: var(--sp-20) var(--sp-18) var(--sp-16);
       font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: -0.05em;
@@ -77,11 +103,11 @@
     }
 
     .sb-nav {
-      padding: 8px;
+      padding: var(--sp-8);
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: var(--sp-2);
     }
 
     .sb-section {
@@ -90,14 +116,14 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--t3);
-      padding: 12px 10px 4px;
+      padding: var(--sp-12) var(--sp-10) var(--sp-4);
     }
 
     .sb-item {
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 8px 10px;
+      gap: var(--sp-9);
+      padding: var(--sp-8) var(--sp-10);
       border-radius: var(--r8);
       font-size: 0.835rem;
       font-weight: 500;
@@ -115,7 +141,7 @@
       font-weight: 600;
       background: var(--b);
       color: var(--t2);
-      padding: 1px 7px;
+      padding: var(--sp-1) var(--sp-7);
       border-radius: var(--rp);
     }
 
@@ -123,13 +149,13 @@
 
     .sb-profile {
       border-top: 1px solid var(--b);
-      padding: 10px 8px;
+      padding: var(--sp-10) var(--sp-8);
     }
     .sb-profile-inner {
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 8px 10px;
+      gap: var(--sp-9);
+      padding: var(--sp-8) var(--sp-10);
       border-radius: var(--r8);
     }
     .avatar {
@@ -159,8 +185,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 14px 24px;
+      gap: var(--sp-12);
+      padding: var(--sp-14) var(--sp-24);
       border-bottom: 1px solid var(--b);
       flex-shrink: 0;
       background: #fff;
@@ -173,16 +199,16 @@
     .topbar-left p {
       font-size: 0.77rem;
       color: var(--t2);
-      margin-top: 1px;
+      margin-top: var(--sp-1);
     }
-    .topbar-right { display: flex; align-items: center; gap: 8px; }
+    .topbar-right { display: flex; align-items: center; gap: var(--sp-8); }
 
     /* ─── MOBILE TOPBAR ─── */
     .mob-topbar {
       display: none;
       align-items: center;
-      gap: 10px;
-      padding: 13px 16px;
+      gap: var(--sp-10);
+      padding: var(--sp-13) var(--sp-16);
       border-bottom: 1px solid var(--b);
       flex-shrink: 0;
       background: #fff;
@@ -207,10 +233,10 @@
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 20px 24px;
+      padding: var(--sp-20) var(--sp-24);
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: var(--sp-18);
       scrollbar-width: thin;
       scrollbar-color: var(--b) transparent;
     }
@@ -222,8 +248,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 8px 16px;
+      gap: var(--sp-6);
+      padding: var(--sp-8) var(--sp-16);
       border-radius: var(--rp);
       font-size: 0.8rem;
       font-weight: 600;
@@ -242,17 +268,17 @@
       border: 1px solid var(--b);
     }
     .btn-outline:hover { background: var(--bh); }
-    .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
-    .btn-xs { padding: 4px 10px; font-size: 0.72rem; }
+    .btn-sm { padding: var(--sp-6) var(--sp-12); font-size: 0.75rem; }
+    .btn-xs { padding: var(--sp-4) var(--sp-10); font-size: 0.72rem; }
 
     /* ─── BADGE / STATUS ─── */
     .pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: var(--sp-4);
       font-size: 0.68rem;
       font-weight: 600;
-      padding: 2px 8px;
+      padding: var(--sp-2) var(--sp-8);
       border-radius: var(--rp);
     }
     .pill-green { background: var(--gbg); color: var(--green); }
@@ -263,17 +289,17 @@
       background: var(--bh);
       border: 1px solid var(--b);
       border-radius: var(--r12);
-      padding: 10px 16px;
+      padding: var(--sp-10) var(--sp-16);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: var(--sp-12);
       flex-wrap: wrap;
     }
     .banner-info {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: var(--sp-8);
       font-size: 0.82rem;
       color: var(--t2);
       flex-wrap: wrap;
@@ -290,8 +316,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
+      gap: var(--sp-12);
+      margin-bottom: var(--sp-10);
       flex-wrap: wrap;
     }
     .section-title {
@@ -305,8 +331,8 @@
       display: inline-flex;
       background: var(--bs);
       border-radius: var(--rp);
-      padding: 3px;
-      gap: 2px;
+      padding: var(--sp-3);
+      gap: var(--sp-2);
       overflow-x: auto;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
@@ -317,7 +343,7 @@
       border: none;
       background: transparent;
       border-radius: var(--rp);
-      padding: 4px 11px;
+      padding: var(--sp-4) var(--sp-11);
       font-size: 0.73rem;
       font-weight: 500;
       color: var(--t3);
@@ -336,16 +362,16 @@
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: var(--sp-10);
     }
     .metric {
       border: 1px solid var(--b);
       border-radius: var(--r12);
-      padding: 16px 18px;
+      padding: var(--sp-16) var(--sp-18);
       background: #fff;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--sp-6);
     }
     .metric-row {
       display: flex;
@@ -365,7 +391,7 @@
     .split {
       display: grid;
       grid-template-columns: 1fr 300px;
-      gap: 14px;
+      gap: var(--sp-14);
       align-items: start;
     }
 
@@ -380,19 +406,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 12px 16px;
+      gap: var(--sp-10);
+      padding: var(--sp-12) var(--sp-16);
       border-bottom: 1px solid var(--b);
       flex-wrap: wrap;
     }
-    .card-hd-l { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .card-hd-r { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .card-hd-l { display: flex; align-items: center; gap: var(--sp-8); flex-wrap: wrap; }
+    .card-hd-r { display: flex; align-items: center; gap: var(--sp-6); flex-wrap: wrap; }
     .card-title { font-size: 0.875rem; font-weight: 700; }
 
     .tag {
       font-size: 0.68rem;
       font-weight: 600;
-      padding: 2px 8px;
+      padding: var(--sp-2) var(--sp-8);
       border-radius: var(--rp);
       background: var(--bs);
       color: var(--t2);
@@ -408,7 +434,7 @@
       color: var(--t3);
     }
     .search-in {
-      padding: 6px 12px 6px 30px;
+      padding: var(--sp-6) var(--sp-12) var(--sp-6) var(--sp-30);
       border: 1px solid var(--b);
       border-radius: var(--rp);
       font-size: 0.78rem;
@@ -426,7 +452,7 @@
     /* ─── TABLE ─── */
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      padding: 9px 14px;
+      padding: var(--sp-9) var(--sp-14);
       font-size: 0.67rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -438,7 +464,7 @@
       white-space: nowrap;
     }
     tbody td {
-      padding: 12px 14px;
+      padding: var(--sp-12) var(--sp-14);
       border-bottom: 1px solid var(--bs);
       vertical-align: middle;
       font-size: 0.82rem;
@@ -449,12 +475,12 @@
 
     .ck { width: 15px; height: 15px; accent-color: var(--t); cursor: pointer; }
     .emp-nm { font-weight: 600; font-size: 0.82rem; }
-    .emp-pos { font-size: 0.7rem; color: var(--t3); margin-top: 1px; }
+    .emp-pos { font-size: 0.7rem; color: var(--t3); margin-top: var(--sp-1); }
     .chip {
       display: inline-block;
       font-size: 0.67rem;
       font-weight: 600;
-      padding: 2px 7px;
+      padding: var(--sp-2) var(--sp-7);
       border-radius: 6px;
       background: var(--bs);
       color: var(--t2);
@@ -465,18 +491,18 @@
       color: var(--t2);
     }
     .thp { font-weight: 700; text-align: right; }
-    .act { display: flex; align-items: center; justify-content: flex-end; gap: 5px; white-space: nowrap; }
+    .act { display: flex; align-items: center; justify-content: flex-end; gap: var(--sp-5); white-space: nowrap; }
 
     /* ─── RIGHT RAIL ─── */
-    .rail { display: flex; flex-direction: column; gap: 10px; }
+    .rail { display: flex; flex-direction: column; gap: var(--sp-10); }
     .rc {
       border: 1px solid var(--b);
       border-radius: var(--r12);
-      padding: 16px;
+      padding: var(--sp-16);
       background: #fff;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: var(--sp-12);
     }
     .rc-hd {
       display: flex;
@@ -496,10 +522,10 @@
     .asset-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: var(--sp-10);
       border: 1px dashed var(--b);
       border-radius: var(--r8);
-      padding: 10px;
+      padding: var(--sp-10);
       background: var(--bh);
     }
     .asset-thumb {
@@ -512,30 +538,30 @@
     }
     .asset-thumb img { max-width: 90%; max-height: 90%; object-fit: contain; }
     .asset-thumb-lbl { font-size: 0.63rem; color: var(--t3); text-align: center; }
-    .asset-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .asset-info { flex: 1; display: flex; flex-direction: column; gap: var(--sp-4); }
     .asset-lbl { font-size: 0.72rem; font-weight: 600; }
-    .asset-btns { display: flex; gap: 4px; }
-    .sig-picker { display: none; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin-top: 6px; }
+    .asset-btns { display: flex; gap: var(--sp-4); }
+    .sig-picker { display: none; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: var(--sp-6); margin-top: var(--sp-6); }
     .sig-picker.open { display: grid; }
-    .sig-opt { border: 1px solid var(--b); border-radius: 6px; background: #fff; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font: inherit; }
+    .sig-opt { border: 1px solid var(--b); border-radius: 6px; background: #fff; padding: var(--sp-4); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); font: inherit; }
     .sig-opt:hover { border-color: var(--t3); }
     .sig-opt.active { border-color: var(--t); box-shadow: 0 0 0 1px var(--t); }
     .sig-opt img { width: 100%; height: 34px; object-fit: contain; }
     .sig-opt span { font-size: 0.58rem; color: var(--t3); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .sig-empty { grid-column: 1 / -1; font-size: 0.68rem; color: var(--t3); text-align: center; padding: 6px; }
+    .sig-empty { grid-column: 1 / -1; font-size: 0.68rem; color: var(--t3); text-align: center; padding: var(--sp-6); }
 
     /* ─── TEMPLATE PICKER ─── */
-    .tpl-picker { display: flex; flex-direction: column; gap: 8px; }
+    .tpl-picker { display: flex; flex-direction: column; gap: var(--sp-8); }
     .tpl-card {
       border: 1px solid var(--b);
       border-radius: var(--r8);
-      padding: 10px 12px;
+      padding: var(--sp-10) var(--sp-12);
       background: #fff;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: var(--sp-5);
     }
     .tpl-card:hover { border-color: var(--t2); background: var(--bh); }
     .tpl-card.active {
@@ -547,7 +573,7 @@
     .tpl-card-title { font-size: 0.77rem; font-weight: 700; }
     .tpl-badge {
       font-size: 0.62rem;
-      padding: 1px 6px;
+      padding: var(--sp-1) var(--sp-6);
       border-radius: 999px;
       background: var(--bs);
       color: var(--t2);
@@ -555,7 +581,7 @@
     }
     .tpl-badge-green { background: #e6f7ee; color: #13714C; }
     .tpl-card-desc { font-size: 0.68rem; color: var(--t3); line-height: 1.35; }
-    .tpl-palette { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+    .tpl-palette { display: flex; align-items: center; gap: var(--sp-5); margin-top: var(--sp-3); }
     .swatch {
       width: 13px; height: 13px; border-radius: 50%; display: inline-block;
       box-shadow: 0 1px 2px rgba(0,0,0,0.06);
@@ -564,18 +590,18 @@
     .modal-tpl-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: var(--sp-8);
     }
     .modal-tpl-opt {
       border: 1px solid var(--b);
       border-radius: var(--r8);
-      padding: 9px 11px;
+      padding: var(--sp-9) var(--sp-11);
       cursor: pointer;
       transition: all 0.15s;
       background: #fff;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: var(--sp-3);
     }
     .modal-tpl-opt:hover { border-color: var(--t2); }
     .modal-tpl-opt.active {
@@ -587,7 +613,7 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 8px;
+      gap: var(--sp-8);
       font-size: 0.79rem;
     }
     .info-lbl { color: var(--t2); flex-shrink: 0; }
@@ -598,14 +624,14 @@
       background: #fff;
       border: 1.5px solid var(--t);
       border-radius: var(--r12);
-      padding: 16px 18px;
+      padding: var(--sp-16) var(--sp-18);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: var(--sp-12);
       transition: border-color 0.2s, background 0.2s;
     }
     .sync-card.done { border: 1px solid var(--b); background: var(--bh); }
-    .sync-head { display: flex; align-items: center; gap: 12px; }
+    .sync-head { display: flex; align-items: center; gap: var(--sp-12); }
     .step-badge {
       width: 26px; height: 26px; flex-shrink: 0;
       border-radius: 50%;
@@ -615,19 +641,19 @@
     }
     .sync-card.done .step-badge { background: var(--green); }
     .sync-title { font-size: 0.92rem; font-weight: 700; line-height: 1.2; }
-    .sync-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .sync-row { display: flex; gap: var(--sp-8); align-items: center; flex-wrap: wrap; }
     .sync-in {
       flex: 1; min-width: 240px;
       border: 1px solid var(--b);
       border-radius: var(--r8);
-      padding: 8px 12px;
+      padding: var(--sp-8) var(--sp-12);
       font-size: 0.8rem;
       background: #fff;
       outline: none;
       transition: border-color 0.12s;
     }
     .sync-in:focus { border-color: var(--t); }
-    .sync-btns { display: flex; gap: 6px; }
+    .sync-btns { display: flex; gap: var(--sp-6); }
 
     /* ─── MODAL ─── */
     .modal-bg {
@@ -639,7 +665,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: var(--sp-16);
     }
     .modal-bg.open { display: flex; }
     .modal-box {
@@ -664,7 +690,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
+      padding: var(--sp-14) var(--sp-20);
       border-bottom: 1px solid var(--b);
       font-size: 0.875rem;
       font-weight: 700;
@@ -684,19 +710,19 @@
     /* ─── MODAL LINK BERBAGI ─── */
     #shareModal .modal-box { max-width: 640px; height: auto; max-height: 90vh; }
     .share-note {
-      margin: 14px 20px 0; padding: 10px 12px;
+      margin: var(--sp-14) var(--sp-20) 0; padding: var(--sp-10) var(--sp-12);
       background: #fffbeb; color: #92400e;
       border: 1px solid #fde68a; border-radius: var(--r8);
       font-size: 0.76rem; line-height: 1.45;
     }
-    .share-prog { margin: 12px 20px 4px; }
-    .share-prog-txt { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--t2); margin-bottom: 5px; }
+    .share-prog { margin: var(--sp-12) var(--sp-20) var(--sp-4); }
+    .share-prog-txt { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--t2); margin-bottom: var(--sp-5); }
     .share-prog-bar { height: 5px; background: var(--bs); border-radius: 99px; overflow: hidden; }
     .share-prog-bar > i { display: block; height: 100%; width: 0; background: var(--green); transition: width 0.2s; }
-    .share-list { padding: 6px 20px 14px; }
+    .share-list { padding: var(--sp-6) var(--sp-20) var(--sp-14); }
     .share-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 0; border-bottom: 1px solid var(--bs);
+      display: flex; align-items: center; gap: var(--sp-10);
+      padding: var(--sp-9) 0; border-bottom: 1px solid var(--bs);
     }
     .share-row:last-child { border-bottom: none; }
     .share-ico {
@@ -709,7 +735,7 @@
     .share-row.busy .share-ico { background: var(--bs); color: var(--t2); }
     .share-name { flex: 1; min-width: 0; font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .share-name small { display: block; font-weight: 400; font-size: 0.7rem; color: var(--t3); }
-    .share-acts { display: flex; gap: 4px; flex-shrink: 0; }
+    .share-acts { display: flex; gap: var(--sp-4); flex-shrink: 0; }
     .share-row:not(.ok) .share-acts .only-ok { display: none; }
     .share-row.revoked .share-name { text-decoration: line-through; color: var(--t3); }
     .btn-danger-o { color: #dc2626; border-color: #fecaca; background: #fff; }
@@ -718,8 +744,8 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 8px;
-      padding: 12px 20px;
+      gap: var(--sp-8);
+      padding: var(--sp-12) var(--sp-20);
       border-top: 1px solid var(--b);
       flex-shrink: 0;
     }
@@ -747,12 +773,12 @@
 
     /* Config form */
     .cfg-form {
-      padding: 20px;
+      padding: var(--sp-20);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: var(--sp-14);
     }
-    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field { display: flex; flex-direction: column; gap: var(--sp-5); }
     .field label {
       font-size: 0.7rem;
       font-weight: 700;
@@ -763,14 +789,14 @@
     .field input {
       border: 1px solid var(--b);
       border-radius: var(--r8);
-      padding: 8px 11px;
+      padding: var(--sp-8) var(--sp-11);
       font-size: 0.82rem;
       outline: none;
       transition: border-color 0.12s;
       background: #fff;
     }
     .field input:focus { border-color: var(--t); box-shadow: 0 0 0 2px rgba(17,24,39,0.06); }
-    .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fg { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); }
 
     /* ─── MOBILE DRAWER ─── */
     .drawer {
@@ -809,13 +835,13 @@
       z-index: 999;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: var(--sp-6);
       pointer-events: none;
     }
     .toast {
       background: var(--t);
       color: #fff;
-      padding: 9px 16px;
+      padding: var(--sp-9) var(--sp-16);
       border-radius: var(--rp);
       font-size: 0.78rem;
       font-weight: 500;
@@ -845,18 +871,18 @@
       .sidebar { display: none; }
       .mob-topbar { display: flex; }
       .topbar { display: none; }
-      .content { padding: 14px 16px; }
+      .content { padding: var(--sp-14) var(--sp-16); }
       .metrics-grid { grid-template-columns: repeat(2, 1fr); }
       .split { grid-template-columns: 1fr; }
-      .rail { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .rail { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-10); }
     }
     @media (max-width: 768px) {
-      .content { padding: 12px 12px; gap: 14px; }
-      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .metric { padding: 13px 14px; }
+      .content { padding: var(--sp-12) var(--sp-12); gap: var(--sp-14); }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-8); }
+      .metric { padding: var(--sp-13) var(--sp-14); }
       .metric-val { font-size: 1.1rem; }
       .rail { grid-template-columns: 1fr; }
-      .card-hd { flex-direction: column; align-items: stretch; gap: 8px; }
+      .card-hd { flex-direction: column; align-items: stretch; gap: var(--sp-8); }
       .card-hd-r { justify-content: space-between; }
       .search-in { width: 100%; }
       .sync-in { min-width: 100%; }
@@ -869,12 +895,12 @@
       }
     }
     @media (max-width: 480px) {
-      .metrics-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-      .metric { padding: 11px 12px; }
-      .section-hd { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-6); }
+      .metric { padding: var(--sp-11) var(--sp-12); }
+      .section-hd { flex-direction: column; align-items: flex-start; gap: var(--sp-8); }
       .seg { width: 100%; display: flex; }
-      .btn { padding: 7px 12px; font-size: 0.74rem; }
-      .btn-sm { padding: 5px 10px; font-size: 0.7rem; }
+      .btn { padding: var(--sp-7) var(--sp-12); font-size: 0.74rem; }
+      .btn-sm { padding: var(--sp-5) var(--sp-10); font-size: 0.7rem; }
       .modal-box { border-radius: 14px; max-height: 100vh; }
       #previewModal .modal-box {
         width: 98vw;
@@ -903,17 +929,17 @@
     }
     @media (max-width: 768px) {
       /* kartu sinkronisasi */
-      .sync-card { padding: 14px; gap: 12px; }
-      .sync-head { align-items: flex-start; gap: 10px; }
+      .sync-card { padding: var(--sp-14); gap: var(--sp-12); }
+      .sync-head { align-items: flex-start; gap: var(--sp-10); }
       .sync-title { font-size: 0.95rem; }
-      .sync-head .banner-info { flex-wrap: nowrap; align-items: flex-start; gap: 7px; line-height: 1.4; margin-top: 2px; }
-      .sync-head .banner-dot { margin-top: 6px; }
+      .sync-head .banner-info { flex-wrap: nowrap; align-items: flex-start; gap: var(--sp-7); line-height: 1.4; margin-top: var(--sp-2); }
+      .sync-head .banner-dot { margin-top: var(--sp-6); }
       .sync-btns { width: 100%; }
       .sync-btns .btn { flex: 1; }
 
       /* toolbar daftar karyawan */
-      .card-hd { padding: 12px; }
-      .card-hd-r { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+      .card-hd { padding: var(--sp-12); }
+      .card-hd-r { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-8); width: 100%; }
       .card-hd-r .search-wrap { grid-column: 1 / -1; }
       .card-hd-r #shareBtn { grid-column: 1 / -1; }
       .card-hd-r .btn { width: 100%; }
@@ -925,31 +951,31 @@
         display: grid;
         grid-template-columns: 22px 1fr auto;
         grid-template-areas: "ck nm thp" "ck dv thp" "act act act";
-        column-gap: 10px; row-gap: 6px;
-        padding: 12px;
+        column-gap: var(--sp-10); row-gap: var(--sp-6);
+        padding: var(--sp-12);
         border-bottom: 1px solid var(--bs);
       }
       tbody td { display: block; padding: 0; border: none; }
       tbody tr:last-child { border-bottom: none; }
       tbody tr.row-empty { display: block; }
-      tbody tr.row-empty td { padding: 32px 12px; }
+      tbody tr.row-empty td { padding: var(--sp-32) var(--sp-12); }
       .c-ck { grid-area: ck; padding-top: 2px; }
       .c-no { display: none !important; }
       .c-nm { grid-area: nm; min-width: 0; }
       .c-dv { grid-area: dv; }
       td.thp { grid-area: thp; align-self: center; font-size: 0.88rem; white-space: nowrap; }
-      .c-act { grid-area: act; margin-top: 2px; }
-      .act { justify-content: stretch; gap: 6px; }
-      .act .btn { flex: 1; padding: 7px 8px; }
+      .c-act { grid-area: act; margin-top: var(--sp-2); }
+      .act { justify-content: stretch; gap: var(--sp-6); }
+      .act .btn { flex: 1; padding: var(--sp-7) var(--sp-8); }
 
       /* modal link */
-      .share-note, .share-prog { margin-left: 14px; margin-right: 14px; }
-      .share-list { padding: 4px 14px 12px; }
-      .share-row { flex-wrap: wrap; gap: 6px 10px; }
+      .share-note, .share-prog { margin-left: var(--sp-14); margin-right: var(--sp-14); }
+      .share-list { padding: var(--sp-4) var(--sp-14) var(--sp-12); }
+      .share-row { flex-wrap: wrap; gap: var(--sp-6) var(--sp-10); }
       .share-name { flex: 1 1 calc(100% - 34px); }
       .share-acts { width: 100%; padding-left: 30px; }
       .share-acts .btn { flex: 1; }
-      #shareModal .modal-ft { flex-wrap: wrap; gap: 6px; }
+      #shareModal .modal-ft { flex-wrap: wrap; gap: var(--sp-6); }
       #shareModal .modal-ft .btn { flex: 1 1 auto; }
     }
     @media (max-width: 380px) {
@@ -994,8 +1020,7 @@
         </a>
       </nav>
 
-      <form method="post" action="/logout" style="padding: 0 12px 8px">
-        <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
+      <form method="post" action="/logout" style="padding: 0 var(--sp-8) 8px"> <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Keluar
         </button>
@@ -1021,25 +1046,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="mob-brand">sesar.</div>
-        <div style="display:flex;gap:6px;margin-left:auto">
-          <button class="btn btn-outline btn-sm" onclick="openConfigModal()" aria-label="Pengaturan">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
-          <button id="mobZipBtn" class="btn btn-dark btn-sm" onclick="downloadSelectedZip()" disabled>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            ZIP
-          </button>
-        </div>
-      </div>
-
-      <!-- DESKTOP TOPBAR -->
-      <div class="topbar">
-        <div class="topbar-left">
-          <h1>Rekap Penggajian</h1>
-          <p>Generator Slip Gaji Otomatis — Sesar Lembang Kalcer</p>
-        </div>
-        <div class="topbar-right">
-          <a id="topbarSheetBtn" class="btn btn-outline" href="#" target="_blank" rel="noopener" style="display: none;">
+        <div style="display:flex;gap:var(--sp-6);margin-left:auto"> <button class="btn btn-outline btn-sm" onclick="openConfigModal()" aria-label="Pengaturan"> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> </button> <button id="mobZipBtn" class="btn btn-dark btn-sm" onclick="downloadSelectedZip()" disabled> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> ZIP </button> </div> </div> <!-- DESKTOP TOPBAR --> <div class="topbar"> <div class="topbar-left"> <h1>Rekap Penggajian</h1> <p>Generator Slip Gaji Otomatis — Sesar Lembang Kalcer</p> </div> <div class="topbar-right"> <a id="topbarSheetBtn" class="btn btn-outline" href="#" target="_blank" rel="noopener" style="display: none;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             Buka Sheet
           </a>
@@ -1116,7 +1123,7 @@
             <div class="metric">
               <div class="metric-row">
                 <span class="metric-label">Tunjangan &amp; Bonus</span>
-                <span class="pill pill-green" id="metricBonusPct">0%</span>
+                <span class="pill pill-gray" id="metricBonusPct">0%</span>
               </div>
               <div class="metric-val" id="metricBonus">Rp 0</div>
               <div class="metric-sub">Kehadiran &amp; lembur WFA</div>
@@ -1163,70 +1170,7 @@
                 </thead>
                 <tbody id="empTbody">
                   <tr class="row-empty">
-                    <td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">
-                      Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik 'Tarik Sheet' atau Upload file Excel.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- RIGHT RAIL -->
-          <div class="rail">
-
-            <!-- ASET KUSTOMISASI -->
-            <div class="rc">
-              <div class="rc-hd">
-                <span class="rc-title">Kustomisasi Aset</span>
-                <button class="rc-link" onclick="openConfigModal()">Edit Info →</button>
-              </div>
-
-              <div class="asset-row">
-                <div class="asset-thumb">
-                  <img id="logoThumb" src="/assets/logo_default.png" alt="Logo" onerror="this.style.display='none'">
-                </div>
-                <div class="asset-info">
-                  <div class="asset-lbl">Logo Kop Surat</div>
-                  <div class="asset-btns">
-                    <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
-                    <button class="btn btn-outline btn-xs" onclick="document.getElementById('logoInput').click()">Ganti</button>
-                    <button class="btn btn-outline btn-xs" onclick="resetLogo()">Reset</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="asset-row">
-                <div class="asset-thumb">
-                  <img id="sigThumb" src="" alt="" style="display:none">
-                  <div id="sigLabel" class="asset-thumb-lbl">TTD Basah</div>
-                </div>
-                <div class="asset-info">
-                  <div class="asset-lbl">Tanda Tangan</div>
-                  <div class="asset-btns">
-                    <input type="file" id="sigInput" accept="image/*" style="display:none" onchange="uploadSig(this)">
-                    <button class="btn btn-outline btn-xs" onclick="document.getElementById('sigInput').click()">Upload</button>
-                    <button class="btn btn-outline btn-xs" onclick="toggleSigPicker()">Pilih</button>
-                    <button class="btn btn-outline btn-xs" onclick="clearSig()">Hapus</button>
-                  </div>
-                </div>
-              </div>
-              <div id="sigPicker" class="sig-picker"></div>
-            </div>
-
-            <!-- PILIHAN TEMPLATE SLIP -->
-            <div class="rc" id="templateCardSection">
-              <div class="rc-hd">
-                <span class="rc-title">Pilihan Template Slip</span>
-                <span class="pill pill-green" id="activeTemplateBadge">Default</span>
-              </div>
-              <div class="tpl-picker">
-                <div class="tpl-card active" id="railTpl_default" onclick="selectTemplate('default')">
-                  <div class="tpl-card-hd">
-                    <span class="tpl-card-title">Classic Monokrom</span>
-                    <span class="tpl-badge">Default</span>
-                  </div>
-                  <div class="tpl-card-desc">Hitam putih formal, standar perbankan &amp; akuntansi</div>
+                    <td colspan="8" style="text-align:center;color:var(--t3);padding:var(--sp-48) 16px"> Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik 'Tarik Sheet' atau Upload file Excel. </td> </tr> </tbody> </table> </div> </div> <!-- RIGHT RAIL --> <div class="rail"> <!-- ASET KUSTOMISASI --> <div class="rc"> <div class="rc-hd"> <span class="rc-title">Kustomisasi Aset</span> <button class="rc-link" onclick="openConfigModal()">Ubah →</button> </div> <div class="asset-row"> <div class="asset-thumb"> <img id="logoThumb" src="/assets/logo_default.png" alt="Logo" onerror="this.style.display='none'"> </div> <div class="asset-info"> <div class="asset-lbl">Logo Kop Surat</div> <div class="asset-btns"> <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="uploadLogo(this)"> <button class="btn btn-outline btn-xs" onclick="document.getElementById('logoInput').click()">Ganti</button> <button class="btn btn-outline btn-xs" onclick="resetLogo()">Reset Logo</button> </div> </div> </div> <div class="asset-row"> <div class="asset-thumb"> <img id="sigThumb" src="" alt="" style="display:none"> <div id="sigLabel" class="asset-thumb-lbl">TTD Basah</div> </div> <div class="asset-info"> <div class="asset-lbl">Tanda Tangan</div> <div class="asset-btns"> <input type="file" id="sigInput" accept="image/*" style="display:none" onchange="uploadSig(this)"> <button class="btn btn-outline btn-xs" onclick="document.getElementById('sigInput').click()">Upload</button> <button class="btn btn-outline btn-xs" onclick="toggleSigPicker()">Pilih</button> <button class="btn btn-outline btn-xs" onclick="clearSig()">Hapus</button> </div> </div> </div> <div id="sigPicker" class="sig-picker"></div> </div> <!-- PILIHAN TEMPLATE SLIP --> <div class="rc" id="templateCardSection"> <div class="rc-hd"> <span class="rc-title">Pilihan Template Slip</span> <span class="pill pill-green" id="activeTemplateBadge">Default</span> </div> <div class="tpl-picker"> <div class="tpl-card active" id="railTpl_default" onclick="selectTemplate('default')"> <div class="tpl-card-hd"> <span class="tpl-card-title">Classic Monokrom</span> <span class="tpl-badge">Default</span> </div> <div class="tpl-card-desc">Hitam putih formal, standar perbankan &amp; akuntansi</div>
                   <div class="tpl-palette">
                     <span class="swatch" style="background:#18181b" title="Hitam"></span>
                     <span class="swatch" style="background:#71717a" title="Abu Gelap"></span>
@@ -1257,22 +1201,7 @@
                 <span class="rc-title">Info Slip</span>
                 <button class="rc-link" onclick="openConfigModal()">Ubah →</button>
               </div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <div class="info-row">
-                  <span class="info-lbl">Periode</span>
-                  <span class="info-val" id="infoPeriod">August 2026</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-lbl">Tanggal Slip</span>
-                  <span class="info-val" id="infoSlipDate">Bandung, 29 Agustus 2026</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-lbl">Penanda Tangan</span>
-                  <span class="info-val" id="infoSigner">Reza Fauzi</span>
-                </div>
-                <div class="info-row">
-                  <span class="info-lbl">Jabatan</span>
-                  <span class="info-val" style="color:var(--t2);font-weight:500" id="infoSignerTitle">Bagian Keuangan</span>
+              <div style="display:flex;flex-direction:column;gap:var(--sp-8)"> <div class="info-row"> <span class="info-lbl">Periode</span> <span class="info-val" id="infoPeriod">August 2026</span> </div> <div class="info-row"> <span class="info-lbl">Tanggal Slip</span> <span class="info-val" id="infoSlipDate">Bandung, 29 Agustus 2026</span> </div> <div class="info-row"> <span class="info-lbl">Penanda Tangan</span> <span class="info-val" id="infoSigner">Reza Fauzi</span> </div> <div class="info-row"> <span class="info-lbl">Jabatan</span> <span class="info-val" style="color:var(--t2);font-weight:500" id="infoSignerTitle">Bagian Keuangan</span>
                 </div>
               </div>
             </div>
@@ -1288,9 +1217,9 @@
   <div class="drawer" id="drawerWrap">
     <div class="drawer-bg" onclick="closeDrawer()"></div>
     <div class="drawer-panel">
-      <div style="padding:20px 18px 14px;font-size:1.1rem;font-weight:800;letter-spacing:-0.05em;border-bottom:1px solid var(--b)">sesar.</div>
+      <div style="padding:var(--sp-20) var(--sp-18) var(--sp-14);font-size:1.1rem;font-weight:800;letter-spacing:-0.05em;border-bottom:1px solid var(--b)">sesar.</div>
 
-      <nav style="padding:8px;display:flex;flex-direction:column;gap:2px;flex:1">
+      <nav style="padding:var(--sp-8);display:flex;flex-direction:column;gap:var(--sp-2);flex:1">
         <div class="sb-section">Menu</div>
         <a class="sb-item active" href="#" onclick="closeDrawer(); return false">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -1304,25 +1233,19 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           Kustomisasi
         </a>
-        <div class="sb-section" style="margin-top:8px">Sumber Data</div>
-        <a class="sb-item" id="drawerSheetLink" href="#" target="_blank" rel="noopener" onclick="closeDrawer()" style="display: none;">
+        <div class="sb-section" style="margin-top:var(--sp-8)">Sumber Data</div> <a class="sb-item" id="drawerSheetLink" href="#" target="_blank" rel="noopener" onclick="closeDrawer()" style="display: none;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Buka Google Sheet
         </a>
       </nav>
 
-      <form method="post" action="/logout" style="padding:0 8px 6px">
-        <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
+      <form method="post" action="/logout" style="padding:0 var(--sp-8) 6px"> <button type="submit" class="sb-item" style="width:100%;background:none;text-align:left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Keluar
         </button>
       </form>
 
-      <div style="border-top:1px solid var(--b);padding:10px 8px">
-        <div style="display:flex;align-items:center;gap:9px;padding:8px 10px">
-          <div class="avatar" id="drawerAvatar">D</div>
-          <div>
-            <div style="font-size:0.78rem;font-weight:600" id="drawerSignerName">Diestria</div>
+      <div style="border-top:1px solid var(--b);padding:var(--sp-10) 8px"> <div style="display:flex;align-items:center;gap:var(--sp-9);padding:var(--sp-8) 10px"> <div class="avatar" id="drawerAvatar">D</div> <div> <div style="font-size:0.78rem;font-weight:600" id="drawerSignerName">Diestria</div>
             <div style="font-size:0.68rem;color:var(--t3)" id="drawerSignerRole">Head of HR</div>
           </div>
         </div>
@@ -1347,12 +1270,7 @@
                   <span style="font-weight:600;font-size:0.75rem">Classic Monokrom</span>
                   <span class="tpl-badge">Default</span>
                 </div>
-                <div style="font-size:0.65rem;color:var(--t3);margin-top:2px">Hitam putih presisi standar akuntansi</div>
-                <div class="tpl-palette" style="margin-top:5px">
-                  <span class="swatch" style="background:#18181b"></span>
-                  <span class="swatch" style="background:#71717a"></span>
-                  <span class="swatch" style="background:#e4e4e7"></span>
-                  <span class="swatch" style="background:#ffffff;border:1px solid #d4d4d8"></span>
+                <div style="font-size:0.65rem;color:var(--t3);margin-top:var(--sp-2)">Hitam putih presisi standar akuntansi</div> <div class="tpl-palette" style="margin-top:var(--sp-5)"> <span class="swatch" style="background:#18181b"></span> <span class="swatch" style="background:#71717a"></span> <span class="swatch" style="background:#e4e4e7"></span> <span class="swatch" style="background:#ffffff;border:1px solid #d4d4d8"></span>
                 </div>
               </div>
               <div class="modal-tpl-opt" id="modalTpl_algae" onclick="selectTemplate('algae')">
@@ -1360,109 +1278,7 @@
                   <span style="font-weight:600;font-size:0.75rem;color:#13714C">Algae Clean Green</span>
                   <span class="tpl-badge tpl-badge-green">Baru</span>
                 </div>
-                <div style="font-size:0.65rem;color:var(--t3);margin-top:2px">Aksen hijau segar (#13714C), background putih</div>
-                <div class="tpl-palette" style="margin-top:5px">
-                  <span class="swatch" style="background:#13714C"></span>
-                  <span class="swatch" style="background:#3AB67D"></span>
-                  <span class="swatch" style="background:#A2E494"></span>
-                  <span class="swatch" style="background:#E9EBED"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fg">
-            <div class="field">
-              <label>Periode Gaji</label>
-              <input type="text" id="cfgPeriod" placeholder="September 2026">
-            </div>
-            <div class="field">
-              <label>Tanggal Slip</label>
-              <input type="text" id="cfgSlipDate" placeholder="Bandung, 29 September 2026">
-            </div>
-          </div>
-          <div class="field">
-            <label>Sub-judul Perusahaan</label>
-            <input type="text" id="cfgSubtitle" placeholder="KARYAWAN SESAR LEMBANG KALCER">
-          </div>
-          <div class="field">
-            <label>Alamat Kantor</label>
-            <input type="text" id="cfgAddress" placeholder="Jl. Cigadung Raya Barat No. 18, Bandung">
-          </div>
-          <div class="fg">
-            <div class="field">
-              <label>Jabatan Penanda Tangan</label>
-              <input type="text" id="cfgSignerTitle" placeholder="Bagian Keuangan,">
-            </div>
-            <div class="field">
-              <label>Nama Penanda Tangan</label>
-              <input type="text" id="cfgSignerName" placeholder="Reza Fauzi">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-ft">
-        <button class="btn btn-outline btn-sm" onclick="closeConfigModal()">Batal</button>
-        <button class="btn btn-dark btn-sm" onclick="saveConfig()">Simpan Perubahan</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ SHARE MODAL ═══════ -->
-  <div class="modal-bg" id="shareModal" onclick="if(event.target===this)closeShareModal()">
-    <div class="modal-box">
-      <div class="modal-hd">
-        <span>Link Slip untuk Dibagikan</span>
-        <button class="modal-close" onclick="closeShareModal()" aria-label="Tutup">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="share-note">
-          <strong>Kirim tiap link hanya ke karyawan yang bersangkutan, jangan di grup.</strong>
-          Siapa pun yang memegang link bisa membuka slip itu tanpa login. Link berlaku <span id="shareTtl">30</span> hari
-          dan tetap sama bila dibuat ulang (isi slip ikut diperbarui).
-        </div>
-        <div class="share-prog">
-          <div class="share-prog-txt"><span id="shareProgTxt">Menyiapkan…</span><span id="shareProgNum"></span></div>
-          <div class="share-prog-bar"><i id="shareProgBar"></i></div>
-        </div>
-        <div class="share-list" id="shareList"></div>
-      </div>
-      <div class="modal-ft">
-        <button class="btn btn-outline btn-danger-o btn-sm" onclick="revokeAllShare()">Cabut semua link</button>
-        <button class="btn btn-outline btn-sm" id="shareCopyAll" onclick="copyAllShare()">Salin semua (daftar)</button>
-        <button class="btn btn-dark btn-sm" onclick="closeShareModal()">Selesai</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ PREVIEW MODAL ═══════ -->
-  <div class="modal-bg" id="previewModal" onclick="if(event.target===this)closePreview()">
-    <div class="modal-box">
-      <div class="modal-hd">
-        <span id="previewTitle">Preview Slip Gaji</span>
-        <button class="modal-close" onclick="closePreview()" aria-label="Tutup">✕</button>
-      </div>
-      <div class="modal-body preview-wrap">
-        <iframe id="previewFrame" src="about:blank"></iframe>
-      </div>
-      <div class="modal-ft">
-        <button class="btn btn-outline btn-sm" onclick="printPreview()">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Cetak
-        </button>
-        <a id="previewDlBtn" class="btn btn-dark btn-sm" href="#" target="_blank">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download PDF
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST STACK -->
-  <div class="toast-stack" id="toastStack"></div>
-
-  <!-- ═══════ JS ═══════ -->
-  <script>
-  'use strict';
+                <div style="font-size:0.65rem;color:var(--t3);margin-top:var(--sp-2)">Aksen hijau segar (#13714C), background putih</div> <div class="tpl-palette" style="margin-top:var(--sp-5)"> <span class="swatch" style="background:#13714C"></span> <span class="swatch" style="background:#3AB67D"></span> <span class="swatch" style="background:#A2E494"></span> <span class="swatch" style="background:#E9EBED"></span> </div> </div> </div> </div> <div class="fg"> <div class="field"> <label>Periode Gaji</label> <input type="text" id="cfgPeriod" placeholder="September 2026"> </div> <div class="field"> <label>Tanggal Slip</label> <input type="text" id="cfgSlipDate" placeholder="Bandung, 29 September 2026"> </div> </div> <div class="field"> <label>Sub-judul Perusahaan</label> <input type="text" id="cfgSubtitle" placeholder="KARYAWAN SESAR LEMBANG KALCER"> </div> <div class="field"> <label>Alamat Kantor</label> <input type="text" id="cfgAddress" placeholder="Jl. Cigadung Raya Barat No. 18, Bandung"> </div> <div class="fg"> <div class="field"> <label>Jabatan Penanda Tangan</label> <input type="text" id="cfgSignerTitle" placeholder="Bagian Keuangan,"> </div> <div class="field"> <label>Nama Penanda Tangan</label> <input type="text" id="cfgSignerName" placeholder="Reza Fauzi"> </div> </div> </div> </div> <div class="modal-ft"> <button class="btn btn-outline btn-sm" onclick="closeConfigModal()">Batal</button> <button class="btn btn-dark btn-sm" onclick="saveConfig()">Simpan Perubahan</button> </div> </div> </div> <!-- ═══════ SHARE MODAL ═══════ --> <div class="modal-bg" id="shareModal" onclick="if(event.target===this)closeShareModal()"> <div class="modal-box"> <div class="modal-hd"> <span>Link Slip untuk Dibagikan</span> <button class="modal-close" onclick="closeShareModal()" aria-label="Tutup">✕</button> </div> <div class="modal-body"> <div class="share-note"> <strong>Kirim tiap link hanya ke karyawan yang bersangkutan, jangan di grup.</strong> Siapa pun yang memegang link bisa membuka slip itu tanpa login. Link berlaku <span id="shareTtl">30</span> hari dan tetap sama bila dibuat ulang (isi slip ikut diperbarui). </div> <div class="share-prog"> <div class="share-prog-txt"><span id="shareProgTxt">Menyiapkan…</span><span id="shareProgNum"></span></div> <div class="share-prog-bar"><i id="shareProgBar"></i></div> </div> <div class="share-list" id="shareList"></div> </div> <div class="modal-ft"> <button class="btn btn-outline btn-danger-o btn-sm" onclick="revokeAllShare()">Cabut semua link</button> <button class="btn btn-outline btn-sm" id="shareCopyAll" onclick="copyAllShare()">Salin semua (daftar)</button> <button class="btn btn-dark btn-sm" onclick="closeShareModal()">Selesai</button> </div> </div> </div> <!-- ═══════ PREVIEW MODAL ═══════ --> <div class="modal-bg" id="previewModal" onclick="if(event.target===this)closePreview()"> <div class="modal-box"> <div class="modal-hd"> <span id="previewTitle">Preview Slip Gaji</span> <button class="modal-close" onclick="closePreview()" aria-label="Tutup">✕</button> </div> <div class="modal-body preview-wrap"> <iframe id="previewFrame" src="about:blank"></iframe> </div> <div class="modal-ft"> <button class="btn btn-outline btn-sm" onclick="printPreview()"> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Cetak </button> <a id="previewDlBtn" class="btn btn-dark btn-sm" href="#" target="_blank"> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF </a> </div> </div> </div> <!-- TOAST STACK --> <div class="toast-stack" id="toastStack"></div> <!-- ═══════ JS ═══════ --> <script> 'use strict';
 
   let employees = [];
   let cfg = {};
@@ -1680,7 +1496,7 @@
   function renderTable(list) {
     const tbody = document.getElementById('empTbody');
     if (!list || !list.length) {
-      tbody.innerHTML = '<tr class="row-empty"><td colspan="8" style="text-align:center;color:var(--t3);padding:48px 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
+      tbody.innerHTML = '<tr class="row-empty"><td colspan="8" style="text-align:center;color:var(--t3);padding:var(--sp-48) 16px">Belum ada data karyawan. Silakan tempel link Google Sheet di bagian Sinkronisasi Data di atas lalu klik \'Tarik Sheet\' atau Upload file Excel.</td></tr>';
       updateSelCount();
       return;
     }
